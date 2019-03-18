@@ -13,7 +13,7 @@
           "enabled": "Enabled"
         },
         "messages": {
-          "warning": "New workflow will override old workflow.",
+          "warning": "If there's an existing workflow, it'll overwrite it.",
           "success": "Uploaded workflow successfully.",
           "error": "Workflow uploading failed."
         }
