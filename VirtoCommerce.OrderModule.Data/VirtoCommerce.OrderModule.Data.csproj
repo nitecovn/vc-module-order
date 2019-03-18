@@ -56,6 +56,10 @@
     <Reference Include="Hangfire.Core, Version=1.6.17.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.Core.1.6.17\lib\net45\Hangfire.Core.dll</HintPath>
     </Reference>
+    <Reference Include="LinqKit, Version=1.1.9.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqKit.1.1.9.0\lib\net45\LinqKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -197,12 +201,17 @@
     <Compile Include="Migrations\201809140916230_AddedAmountColumnToPaymentInEntity.Designer.cs">
       <DependentUpon>201809140916230_AddedAmountColumnToPaymentInEntity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903180411284_CreateOrganizationWorkflow.cs" />
+    <Compile Include="Migrations\201903180411284_CreateOrganizationWorkflow.Designer.cs">
+      <DependentUpon>201903180411284_CreateOrganizationWorkflow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
     <Compile Include="Model\DiscountEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
     <Compile Include="Model\OperationEntity.cs" />
+    <Compile Include="Model\OrganizationWorkflowEntity.cs" />
     <Compile Include="Model\PaymentGatewayTransactionEntity.cs" />
     <Compile Include="Model\PaymentInEntity.cs" />
     <Compile Include="Model\ShipmentEntity.cs" />
@@ -228,6 +237,8 @@
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
     <Compile Include="Services\DefaultCustomerOrderTotalsCalculator.cs" />
     <Compile Include="Services\ICustomerOrderBuilder.cs" />
+    <Compile Include="Services\ImportWorkflowService.cs" />
+    <Compile Include="Services\IOrganizationWorkflowRepository.cs" />
     <Compile Include="Utilities\OperationUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -315,6 +326,9 @@
     <EmbeddedResource Include="Migrations\201809140916230_AddedAmountColumnToPaymentInEntity.resx">
       <DependentUpon>201809140916230_AddedAmountColumnToPaymentInEntity.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903180411284_CreateOrganizationWorkflow.resx">
+      <DependentUpon>201903180411284_CreateOrganizationWorkflow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\OrderResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OrderResources.Designer.cs</LastGenOutput>
@@ -336,7 +350,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.OrderModule.Core\VirtoCommerce.OrderModule.Core.csproj">
-      <Project>{047e296b-f3ea-4c49-85b5-81813840ec13}</Project>
+      <Project>{99bc07cc-d273-41b0-b7be-8d4c0cea68bd}</Project>
       <Name>VirtoCommerce.OrderModule.Core</Name>
     </ProjectReference>
   </ItemGroup>

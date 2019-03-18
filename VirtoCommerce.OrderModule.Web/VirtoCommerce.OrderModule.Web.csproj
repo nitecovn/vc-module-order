@@ -154,9 +154,11 @@
     </Compile>
     <Compile Include="BackgroundJobs\CollectOrderStatisticJob.cs" />
     <Compile Include="Controllers\Api\OrderModuleController.cs" />
+    <Compile Include="Controllers\Api\OrganizationWorkflowController.cs" />
     <Compile Include="JsonConverters\PolymorphicOperationJsonConverter.cs" />
     <Compile Include="Model\KeyValuePair.cs" />
     <Compile Include="Model\PaymentCallbackParameters.cs" />
+    <Compile Include="Security\WorkflowPredefinedPermissions.cs" />
     <Content Include="Scripts\blades\customerOrder-change-log.js" />
     <Content Include="Scripts\blades\customerOrder-change-log.tpl.html" />
     <Content Include="Scripts\resources\securityAccounts.js" />
@@ -203,7 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.OrderModule.Core\VirtoCommerce.OrderModule.Core.csproj">
-      <Project>{047e296b-f3ea-4c49-85b5-81813840ec13}</Project>
+      <Project>{99bc07cc-d273-41b0-b7be-8d4c0cea68bd}</Project>
       <Name>VirtoCommerce.OrderModule.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.OrderModule.Data\VirtoCommerce.OrderModule.Data.csproj">

@@ -13,6 +13,7 @@ using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.OrderModule.Core.Services;
 using VirtoCommerce.OrderModule.Core.Models;
 using VirtoCommerce.OrderModule.Data.Handlers;
 using VirtoCommerce.OrderModule.Data.Notifications;
@@ -72,7 +73,11 @@ namespace VirtoCommerce.OrderModule.Web
             _container.RegisterType<ICustomerOrderSearchService, CustomerOrderServiceImpl>();
             _container.RegisterType<ICustomerOrderBuilder, CustomerOrderBuilderImpl>();
 
+            _container.RegisterType<IOrganizationWorkflowRepository>(new InjectionFactory(c => new OrderRepositoryImpl(_connectionString, _container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor())));
+
             _container.RegisterType<ICustomerOrderTotalsCalculator, DefaultCustomerOrderTotalsCalculator>(new ContainerControlledLifetimeManager());
+
+            _container.RegisterType<IImportWorkflowService, ImportWorkflowService>();
         }
 
         public override void PostInitialize()
