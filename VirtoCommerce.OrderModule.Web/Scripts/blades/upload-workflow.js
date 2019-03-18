@@ -4,21 +4,15 @@ angular.module('virtoCommerce.orderModule')
         function ($scope, bladeNavigationService, workflows, FileUploader) {
             var blade = $scope.blade;
             var orgBlade = blade.parentBlade;
-            var _item, _file;
+            var _item, _file = {};
 
             blade.isLoading = false;
             blade.enabledWorkFlow = false;
             $scope.hasWorkflow = false;
             $scope.hasFileChanged = false;
             $scope.hasStatusChanged = false;
-
-            if (typeof orgBlade.workflow !== 'undefined' && typeof orgBlade.workflow.workflowName !== 'undefined') {
-                $scope.hasWorkflow = true;
-                $scope.workflowName = orgBlade.workflow.workflowName;
-                $scope.modifiedDate = orgBlade.workflow.modifiedDate;
-                blade.enabledWorkFlow = orgBlade.workflow.status;
-            }
-
+            
+            resetWorkflowData();
             // Initialize Json Uploader
             if (!$scope.uploader) {
                 // create the uploader
@@ -38,9 +32,8 @@ angular.module('virtoCommerce.orderModule')
                 uploader.onSuccessItem = function (fileItem, asset, status, headers) {
                     _item = null;
                     _file = {
-                        "organizationId": orgBlade.currentEntity.id,
-                        "jsonPath": asset[0].relativeUrl,
-                        "workflowName": asset[0].name
+                        jsonPath: asset[0].relativeUrl,
+                        workflowName: asset[0].name
                     };
                     $scope.hasFileChanged = true;
                     $scope.hasWorkflow = true;
@@ -54,6 +47,9 @@ angular.module('virtoCommerce.orderModule')
                 };
 
                 uploader.onErrorItem = function (item, response, status, headers) {
+                    _file = {};
+                    resetWorkflowData();
+                    $scope.hasFileChanged = false;
                     blade.isLoading = false;
                     bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
                 };
@@ -74,27 +70,35 @@ angular.module('virtoCommerce.orderModule')
                     icon: 'fa fa-save',
                     executeMethod: function () {
                         blade.isLoading = true;
+                        var workflow = angular.extend({
+                            organizationId: orgBlade.currentEntity.id
+                        }, _file, { status: blade.enabledWorkFlow });
                         // Save file information
-                        workflows.updateWorkflow({
-                            organizationId: _file.organizationId,
-                            workflowName: _file.workflowName,
-                            jsonPath: _file.jsonPath,
-                            status: blade.enabledWorkFlow
-                        }).$promise.then(function (workflow) {
-                            workflow = workflow.data;
-                            $scope.jsonPath = '';
-                            $scope.workflowName = workflow.workflowName;
-                            $scope.modifiedDate = workflow.modifiedDate;
-                            blade.enabledWorkFlow = workflow.status;
-                        }, function (response) {
-                            bladeNavigationService.setError(response, blade);
-                        }).finally(function () {
-                            blade.isLoading = false;
-                        });
+                        workflows.updateWorkflow(workflow)
+                            .$promise.then(function (workflow) {
+                                workflow = workflow.data;
+                                $scope.jsonPath = '';
+                                $scope.workflowName = workflow.workflowName;
+                                $scope.modifiedDate = workflow.modifiedDate;
+                                blade.enabledWorkFlow = workflow.status;
+                            }, function (response) {
+                                bladeNavigationService.setError(response, blade);
+                            }).finally(function () {
+                                blade.isLoading = false;
+                            });
                     },
                     canExecuteMethod: function () {
                         return $scope.hasStatusChanged || $scope.hasFileChanged;
                     }
                 }
             ];
+
+            function resetWorkflowData() {
+                if (typeof orgBlade.workflow !== 'undefined' && typeof orgBlade.workflow.workflowName !== 'undefined') {
+                    $scope.hasWorkflow = true;
+                    $scope.workflowName = orgBlade.workflow.workflowName;
+                    $scope.modifiedDate = orgBlade.workflow.modifiedDate;
+                    blade.enabledWorkFlow = orgBlade.workflow.status;
+                }
+            }
 }]);
