@@ -23,6 +23,8 @@ namespace VirtoCommerce.OrderModule.Data.Services
         private readonly ICacheManager<object> _cacheManager;
         private IOrganizationWorkflowRepository _repositoryFactory;
 
+        private const string CacheRegion = "WorkflowRegion";
+
         public ImportWorkflowService(IBlobStorageProvider blobStorageProvider,
             ICacheManager<object> cacheManager,
             IOrganizationWorkflowRepository repositoryFactory)
@@ -50,8 +52,8 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 JsonPath = workflowModel.JsonPath,
                 Status = workflowModel.Status
             };
-
-
+            if (!IsValidJson(workflowModel.JsonPath))
+                return null;
             using (var changeTracker = GetChangeTracker(_repositoryFactory))
             {
                 changeTracker.Attach(workflow);
@@ -61,18 +63,39 @@ namespace VirtoCommerce.OrderModule.Data.Services
             return workflow.ToModel();
         }
 
+        private bool IsValidJson(string jsonPath)
+        {
+            string jsonValue;
+            using (var stream = _blobStorageProvider.OpenRead(jsonPath))
+            {
+                if (stream.Length == 0)
+                    throw new Exception("File is not empty");
+                if (stream.Length > (1024 * 1024))
+                    throw new Exception("File is not over 1MB");
+
+                var reader = new StreamReader(stream);                
+                jsonValue = reader.ReadToEnd();
+            }
+
+            try
+            {
+                var workFlow = JsonConvert.DeserializeObject<WorkflowModel>(jsonValue);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
+        }
+
         public WorkflowModel GetWorkFlowDetailByOrganizationId(string organizationId)
         {
-
             var model = GetWorkFlowByOrganizationId(organizationId);
-
             return GetWorkflowDetail(model);
-
         }
 
         public OrganizationWorkflowModel GetWorkFlowByOrganizationId(string organizationId)
         {
-
             _repositoryFactory.DisableChangesTracking();
             var workflows = _repositoryFactory.GetByOrganizationIdAsync(organizationId);
 
@@ -82,14 +105,14 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 return workflow.ToModel();
             }
             return null;
-
         }
 
         private WorkflowModel GetWorkflowDetail(OrganizationWorkflowModel model)
         {
             if (model == null)
                 return null;
-            return _cacheManager.Get("Workflow", "WorkflowRegion", () =>
+            string cacheKey = "Workflow_" + model.Id;
+            return _cacheManager.Get(cacheKey, CacheRegion, () =>
             {
                 string jsonValue;
                 using (var stream = _blobStorageProvider.OpenRead(model.JsonPath))
@@ -162,6 +185,12 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 return workflow.Result.ToModel();
             }
             return null;
+        }
+
+        public WorkflowModel GetDetail(string workflowId)
+        {
+            var workflow = Get(workflowId);
+            return GetWorkflowDetail(workflow);
         }
     }
 }
