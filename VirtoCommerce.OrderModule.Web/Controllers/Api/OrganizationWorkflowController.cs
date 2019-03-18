@@ -1,3 +1,4 @@
+using System;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Customer.Services;
@@ -10,7 +11,7 @@ using VirtoCommerce.Platform.Core.Web.Security;
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
     [RoutePrefix("api/workflows")]
-    [CheckPermission(Permission = WorkflowPredefinedPermissions.Read)]
+    //[CheckPermission(Permission = WorkflowPredefinedPermissions.Read)]
     public class OrganizationWorkflowController : ApiController
     {
         private readonly IMemberService _memberService;
@@ -46,20 +47,29 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(OrganizationWorkflowModel))]
-        [CheckPermission(Permission = WorkflowPredefinedPermissions.Upload)]
+        //[CheckPermission(Permission = WorkflowPredefinedPermissions.Upload)]
         public IHttpActionResult Upload([FromBody] OrganizationWorkflowModelApi workflowApiModel)
         {
             if (workflowApiModel == null)
                 return Ok(new { });
-            OrganizationWorkflowModel model = new OrganizationWorkflowModel()
+            
+            try
             {
-                JsonPath = workflowApiModel.JsonPath,
-                OrganizationId = workflowApiModel.OrganizationId,
-                Status = workflowApiModel.Status,
-                WorkflowName = workflowApiModel.WorkflowName
-            };
-            var workflow = _importWorkflowService.ImportOrUpdateWorkflow(model);
-            return Ok(new { data = workflow });
+                var model = new OrganizationWorkflowModel()
+                {
+                    JsonPath = workflowApiModel.JsonPath,
+                    OrganizationId = workflowApiModel.OrganizationId,
+                    Status = workflowApiModel.Status,
+                    WorkflowName = workflowApiModel.WorkflowName
+                };
+                var workflow = _importWorkflowService.ImportOrUpdateWorkflow(model);
+                return Ok(new { data = workflow });
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+            
         }
 
         

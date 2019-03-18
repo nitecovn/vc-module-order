@@ -52,8 +52,8 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 JsonPath = workflowModel.JsonPath,
                 Status = workflowModel.Status
             };
-
-
+            if (!IsValidJson(workflowModel.JsonPath))
+                return null;
             using (var changeTracker = GetChangeTracker(_repositoryFactory))
             {
                 changeTracker.Attach(workflow);
@@ -61,6 +61,31 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 CommitChanges(_repositoryFactory);
             }
             return workflow.ToModel();
+        }
+
+        private bool IsValidJson(string jsonPath)
+        {
+            string jsonValue;
+            using (var stream = _blobStorageProvider.OpenRead(jsonPath))
+            {
+                if (stream.Length == 0)
+                    throw new Exception("File is not empty");
+                if (stream.Length > (1024 * 1024))
+                    throw new Exception("File is not over 1MB");
+
+                var reader = new StreamReader(stream);                
+                jsonValue = reader.ReadToEnd();
+            }
+
+            try
+            {
+                var workFlow = JsonConvert.DeserializeObject<WorkflowModel>(jsonValue);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
         }
 
         public WorkflowModel GetWorkFlowDetailByOrganizationId(string organizationId)
