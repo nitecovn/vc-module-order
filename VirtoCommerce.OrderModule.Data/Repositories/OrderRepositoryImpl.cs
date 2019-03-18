@@ -1,7 +1,10 @@
+using System;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.Platform.Core.Common;
@@ -10,7 +13,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.OrderModule.Data.Repositories
 {
-    public class OrderRepositoryImpl : EFRepositoryBase, IOrderRepository
+    public class OrderRepositoryImpl : EFRepositoryBase, IOrderRepository, IOrganizationWorkflowRepository
     {
         public OrderRepositoryImpl()
         {
@@ -204,6 +207,10 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
             modelBuilder.Entity<PaymentGatewayTransactionEntity>().ToTable("OrderPaymentGatewayTransaction");
             #endregion
 
+            #region PaymentGatewayTransactionEntity
+            modelBuilder.Entity<OrganizationWorkflowEntity>().ToTable("OrganizationWorkflow").HasKey(x => x.Id).Property(x => x.Id);
+            #endregion
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -218,6 +225,8 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
         public IQueryable<AddressEntity> Addresses => GetAsQueryable<AddressEntity>();
         public IQueryable<LineItemEntity> LineItems => GetAsQueryable<LineItemEntity>();
         public IQueryable<PaymentGatewayTransactionEntity> Transactions => GetAsQueryable<PaymentGatewayTransactionEntity>();
+
+        
 
         public virtual CustomerOrderEntity[] GetCustomerOrdersByIds(string[] ids, CustomerOrderResponseGroup responseGroup)
         {
@@ -270,5 +279,37 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
                 Remove(order);
             }
         }
+
+        #region IOrganizationWorkflowRepository
+        public IQueryable<OrganizationWorkflowEntity> OrganizationWorkflows => GetAsQueryable<OrganizationWorkflowEntity>();
+
+        public Task<OrganizationWorkflowEntity[]> GetByOrganizationIdAsync(string organizationId)
+        {
+            return OrganizationWorkflows.Where(x => x.OrganizationId == organizationId).OrderByDescending( x => x.CreatedDate ).ToArrayAsync();
+        }
+        public void AddWorkflow(OrganizationWorkflowEntity entity)
+        {
+            Add<OrganizationWorkflowEntity>(entity);
+        }
+        public async Task UpdateAsync(OrganizationWorkflowEntity entity)
+        {
+            var organizationWorkflows = await OrganizationWorkflows.Where(x => x.OrganizationId == entity.OrganizationId).ToArrayAsync();
+            var organizationWorkflow = organizationWorkflows.FirstOrDefault();
+            if (organizationWorkflow != null)
+            {
+                Update<OrganizationWorkflowEntity>(entity);
+            }
+        }
+        public OrganizationWorkflowEntity[] Search(Expression<Func<OrganizationWorkflowEntity, bool>> filter)
+        {
+            return LinqKit.Extensions.AsExpandable(OrganizationWorkflows).Where(filter).ToArray();
+
+        }
+
+        public Task<OrganizationWorkflowEntity> Get(string id)
+        {
+            return OrganizationWorkflows.FirstOrDefaultAsync(x => x.Id == id);
+        }
+        #endregion
     }
 }

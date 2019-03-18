@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <module>
     <id>VirtoCommerce.Orders</id>
-    <version>2.17.21</version>
+    <version>2.17.22</version>
     <platformVersion>2.13.24</platformVersion>
     <dependencies>
         <dependency id="VirtoCommerce.Core" version="2.25.13" />
@@ -141,6 +141,8 @@
             <permission id="order:read" name="View order data" description="Permission to browse and view order data."/>
             <permission id="order:update" name="Update order data" description="Permission to update order data."/>
             <permission id="order:delete" name="Delete order" description="Permission to delete orders."/>
+            <permission id="workflow:upload" name="Upload order workflow" description="Permission to import workflow data."/>
+            <permission id="workflow:read" name="View order workflow" description="Permission to browse and view workflow data."/>
         </group>
     </permissions>
 </module>
