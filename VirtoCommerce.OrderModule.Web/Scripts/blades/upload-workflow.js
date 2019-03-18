@@ -4,29 +4,20 @@ angular.module('virtoCommerce.orderModule')
         function ($scope, bladeNavigationService, workflows, FileUploader) {
             var blade = $scope.blade;
             var orgBlade = blade.parentBlade;
-            var _enabledWorkFlow = false;
             var _item, _file;
 
             blade.isLoading = false;
             blade.enabledWorkFlow = false;
-            $scope.workflowName = null;
-            $scope.hasChanged = false;
-            $scope.hasWorkflow = typeof orgBlade.workflow !== 'undefined' && typeof orgBlade.workflow.workflowStates !== 'undefined' && orgBlade.workflow.workflowStates.length;
+            $scope.hasWorkflow = false;
+            $scope.hasFileChanged = false;
+            $scope.hasStatusChanged = false;
 
-            // Get Organization Workflow Information
-            // workflows.search({ organizationId: orgBlade.currentEntityId })
-            //     .$promise
-            //     .then(function (data) {
-            //         var _result = data.result;
-            //         if (_result && _result.length) {
-            //             $scope.hasWorkflow = true;
-            //             $scope.workflowName = _result[0].workflowName;
-            //             blade.enabledWorkFlow = _result[0].status;
-            //             _enabledWorkFlow = _result[0].status;
-            //         }
-            //     }).finally(function () {
-            //         blade.isLoading = false;
-            //     });
+            if (typeof orgBlade.workflow !== 'undefined' && typeof orgBlade.workflow.workflowName !== 'undefined') {
+                $scope.hasWorkflow = true;
+                $scope.workflowName = orgBlade.workflow.workflowName;
+                $scope.modifiedDate = orgBlade.workflow.modifiedDate;
+                blade.enabledWorkFlow = orgBlade.workflow.status;
+            }
 
             // Initialize Json Uploader
             if (!$scope.uploader) {
@@ -45,27 +36,37 @@ angular.module('virtoCommerce.orderModule')
                 };
 
                 uploader.onSuccessItem = function (fileItem, asset, status, headers) {
-                    $scope.hasChanged = true;
+                    _item = null;
                     _file = {
-                        "organizationid": orgBlade.currentEntity.id,
-                        "fileurl": asset[0].relativeUrl,
-                        "filename": asset[0].name
+                        "organizationId": orgBlade.currentEntity.id,
+                        "jsonPath": asset[0].relativeUrl,
+                        "workflowName": asset[0].name
                     };
+                    $scope.hasFileChanged = true;
+                    $scope.hasWorkflow = true;
+                    blade.isLoading = false;
                 };
 
                 uploader.onAfterAddingFile = function (item) {
                     _item = item;
+                    $scope.jsonPath = item.file.name;
                     bladeNavigationService.setError(null, blade);
                 };
 
                 uploader.onErrorItem = function (item, response, status, headers) {
+                    blade.isLoading = false;
                     bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
                 };
 
                 $scope.uploadWorkflow = function () {
-                    uploader.uploadItem(_item);
+                    if (_item) uploader.uploadItem(_item);
                 };
             }
+
+            $scope.onStatusChanged = function () {
+                if (blade.enabledWorkFlow !== orgBlade.workflow.status) $scope.hasStatusChanged = true;
+                else $scope.hasStatusChanged = false;
+            };
 
             $scope.blade.toolbarCommands = [
                 {
@@ -74,22 +75,17 @@ angular.module('virtoCommerce.orderModule')
                     executeMethod: function () {
                         blade.isLoading = true;
                         // Save file information
-                        workflows.updateFile(_file).then(function () {
-                            $scope.fileUrl = _file.fileurl;
-                            $scope.fileName = _file.filename;
-                            $scope.hasWorkflow = true;
-                            blade.enabledWorkFlow = data.result.status;
-                            _enabledWorkFlow = data.result.status;
-
-                            console.log('Saved : ' + _enabledWorkFlow + "  " + blade.enabledWorkFlow);
-
-                            workflows.updateStatus({id : orgBlade.currentEntity.id, status : blade.enabledWorkFlow })
-                            .then(function (data) {
-                                console.log(data);
-                            }).finally(function () {
-                                blade.isLoading = false;
-                            });
-
+                        workflows.updateWorkflow({
+                            organizationId: _file.organizationId,
+                            workflowName: _file.workflowName,
+                            jsonPath: _file.jsonPath,
+                            status: blade.enabledWorkFlow
+                        }).$promise.then(function (workflow) {
+                            workflow = workflow.data;
+                            $scope.jsonPath = '';
+                            $scope.workflowName = workflow.workflowName;
+                            $scope.modifiedDate = workflow.modifiedDate;
+                            blade.enabledWorkFlow = workflow.status;
                         }, function (response) {
                             bladeNavigationService.setError(response, blade);
                         }).finally(function () {
@@ -97,7 +93,7 @@ angular.module('virtoCommerce.orderModule')
                         });
                     },
                     canExecuteMethod: function () {
-                        return $scope.hasChanged;
+                        return $scope.hasStatusChanged || $scope.hasFileChanged;
                     }
                 }
             ];
