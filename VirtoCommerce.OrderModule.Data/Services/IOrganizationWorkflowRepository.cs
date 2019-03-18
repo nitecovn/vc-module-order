@@ -10,7 +10,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
     public interface IOrganizationWorkflowRepository : IRepository
     {
         IQueryable<OrganizationWorkflowEntity> OrganizationWorkflows { get; }
-        OrganizationWorkflowEntity Get(string id);
+        Task<OrganizationWorkflowEntity> Get(string id);
         Task<OrganizationWorkflowEntity[]> GetByOrganizationIdAsync(string organizationId);
         Task UpdateAsync(OrganizationWorkflowEntity entity);
         void AddWorkflow(OrganizationWorkflowEntity entity);

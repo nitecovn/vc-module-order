@@ -54,7 +54,6 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
             using (var changeTracker = GetChangeTracker(_repositoryFactory))
             {
-                var workflows = _repositoryFactory.GetByOrganizationIdAsync(workflowModel.OrganizationId);
                 changeTracker.Attach(workflow);
                 _repositoryFactory.Add(workflow);
                 CommitChanges(_repositoryFactory);
@@ -65,27 +64,44 @@ namespace VirtoCommerce.OrderModule.Data.Services
         public WorkflowModel GetWorkFlowDetailByOrganizationId(string organizationId)
         {
 
+            var model = GetWorkFlowByOrganizationId(organizationId);
+
+            return GetWorkflowDetail(model);
+
+        }
+
+        public OrganizationWorkflowModel GetWorkFlowByOrganizationId(string organizationId)
+        {
+
             _repositoryFactory.DisableChangesTracking();
             var workflows = _repositoryFactory.GetByOrganizationIdAsync(organizationId);
 
             if (workflows.Result.Any())
             {
                 var workflow = workflows.Result[0];
-                return _cacheManager.Get("Workflow", "WorkflowRegion", () =>
-                {
-                    string jsonValue;
-                    using (var stream = _blobStorageProvider.OpenRead(workflow.JsonPath))
-                    {
-                        var reader = new StreamReader(stream);
-                        jsonValue = reader.ReadToEnd();
-                    }
-                    var workFlow = JsonConvert.DeserializeObject<WorkflowModel>(jsonValue);
-                    return workFlow;
-                });
+                return workflow.ToModel();
             }
             return null;
 
         }
+
+        private WorkflowModel GetWorkflowDetail(OrganizationWorkflowModel model)
+        {
+            if (model == null)
+                return null;
+            return _cacheManager.Get("Workflow", "WorkflowRegion", () =>
+            {
+                string jsonValue;
+                using (var stream = _blobStorageProvider.OpenRead(model.JsonPath))
+                {
+                    var reader = new StreamReader(stream);
+                    jsonValue = reader.ReadToEnd();
+                }
+                var workFlow = JsonConvert.DeserializeObject<WorkflowModel>(jsonValue);
+                return workFlow;
+            });
+        }
+
         public OrganizationWorkflowModel ChangeWorkflowStatus(bool status, string organizationId)
         {
             //Update status for organization workflow
@@ -141,17 +157,11 @@ namespace VirtoCommerce.OrderModule.Data.Services
         public OrganizationWorkflowModel Get(string workflowId)
         {
             var workflow = _repositoryFactory.Get(workflowId);
-            return workflow.ToModel();
-        }
-
-        public WorkflowModel GetActiveWorkFlowDetail()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public OrganizationWorkflowModel GetActiveWorkflow()
-        {
-            throw new NotImplementedException();
+            if (workflow.Result != null)
+            {
+                return workflow.Result.ToModel();
+            }
+            return null;
         }
     }
 }
