@@ -202,6 +202,13 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
         knownOperations.registerOperation(shipmentOperation);
 
         //Register widgets
+        var workflowWidget = {
+            controller: 'virtoCommerce.orderModule.workflowWidgetController',
+            size: [1, 1],
+            template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/workflowUploadWidget.tpl.html'
+        };
+        widgetService.registerWidget(workflowWidget, 'organizationDetail2');
+
         widgetService.registerWidget({
             controller: 'virtoCommerce.orderModule.notificationsLogWidgetController',
             template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/notificationsLogWidget.tpl.html'
