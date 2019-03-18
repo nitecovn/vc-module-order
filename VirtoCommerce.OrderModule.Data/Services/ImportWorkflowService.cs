@@ -163,5 +163,11 @@ namespace VirtoCommerce.OrderModule.Data.Services
             }
             return null;
         }
+
+        public WorkflowModel GetDetail(string workflowId)
+        {
+            var workflow = Get(workflowId);
+            return GetWorkflowDetail(workflow);
+        }
     }
 }
