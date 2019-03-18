@@ -13,6 +13,8 @@ namespace VirtoCommerce.OrderModule.Core.Services
 
         OrganizationWorkflowModel Get(string workflowId);
 
+        WorkflowModel GetDetail(string workflowId);
+
         List<OrganizationWorkflowModel> Search(SearchCriteriaModel searchWorkflowCriteria);
 
         OrganizationWorkflowModel ImportOrUpdateWorkflow(OrganizationWorkflowModel workflowModel);
