@@ -207,7 +207,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
             modelBuilder.Entity<PaymentGatewayTransactionEntity>().ToTable("OrderPaymentGatewayTransaction");
             #endregion
 
-            #region PaymentGatewayTransactionEntity
+            #region OrganizationWorkflowEntity
             modelBuilder.Entity<OrganizationWorkflowEntity>().ToTable("OrganizationWorkflow").HasKey(x => x.Id).Property(x => x.Id);
             #endregion
 
