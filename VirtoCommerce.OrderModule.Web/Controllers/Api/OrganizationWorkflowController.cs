@@ -3,13 +3,14 @@ using System.Web.Http.Description;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.OrderModule.Core.Models;
 using VirtoCommerce.OrderModule.Core.Services;
+using VirtoCommerce.OrderModule.Web.Controllers.Model;
 using VirtoCommerce.OrderModule.Web.Security;
 using VirtoCommerce.Platform.Core.Web.Security;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
     [RoutePrefix("api/workflows")]
-    //[CheckPermission(Permission = WorkflowPredefinedPermissions.Read)]
+    [CheckPermission(Permission = WorkflowPredefinedPermissions.Read)]
     public class OrganizationWorkflowController : ApiController
     {
         private readonly IMemberService _memberService;
@@ -29,17 +30,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [ResponseType(typeof(OrganizationWorkflowModel))]
         public IHttpActionResult Get(string organizationId)
         {
-            var workflow = _importWorkflowService.GetWorkFlowDetailByOrganizationId(organizationId);
-            return Ok(new { data = workflow });
-        }
-
-        [HttpPost]
-        [Route("")]
-        [ResponseType(typeof(OrganizationWorkflowModel))]
-        //[CheckPermission(Permission = WorkflowPredefinedPermissions.Upload)]
-        public IHttpActionResult Upload([FromBody] OrganizationWorkflowModel workflowModel)
-        {
-            var workflow = _importWorkflowService.ImportOrUpdateWorkflow(workflowModel);
+            var workflow = _importWorkflowService.GetWorkFlowByOrganizationId(organizationId);
             return Ok(new { data = workflow });
         }
 
@@ -51,6 +42,27 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             var workflow = _importWorkflowService.GetWorkFlowDetailByOrganizationId(organizationId);
             return Ok(new { data = workflow });
         }
+
+        [HttpPost]
+        [Route("")]
+        [ResponseType(typeof(OrganizationWorkflowModel))]
+        [CheckPermission(Permission = WorkflowPredefinedPermissions.Upload)]
+        public IHttpActionResult Upload([FromBody] OrganizationWorkflowModelApi workflowApiModel)
+        {
+            if (workflowApiModel == null)
+                return Ok(new { });
+            OrganizationWorkflowModel model = new OrganizationWorkflowModel()
+            {
+                JsonPath = workflowApiModel.JsonPath,
+                OrganizationId = workflowApiModel.OrganizationId,
+                Status = workflowApiModel.Status,
+                WorkflowName = workflowApiModel.WorkflowName
+            };
+            var workflow = _importWorkflowService.ImportOrUpdateWorkflow(model);
+            return Ok(new { data = workflow });
+        }
+
+        
 
 
        

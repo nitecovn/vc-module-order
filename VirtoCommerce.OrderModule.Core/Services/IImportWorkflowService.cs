@@ -9,13 +9,9 @@ namespace VirtoCommerce.OrderModule.Core.Services
 
         WorkflowModel GetWorkFlowDetailByOrganizationId(string organizationId);
 
-        WorkflowModel GetActiveWorkFlowDetail();
+        OrganizationWorkflowModel GetWorkFlowByOrganizationId(string organizationId);
 
         OrganizationWorkflowModel Get(string workflowId);
-
-        OrganizationWorkflowModel GetActiveWorkflow();
-
-        //void ChangeWorkflowStatus(bool status, string organizationId);
 
         List<OrganizationWorkflowModel> Search(SearchCriteriaModel searchWorkflowCriteria);
 

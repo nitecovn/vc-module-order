@@ -285,7 +285,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
         public Task<OrganizationWorkflowEntity[]> GetByOrganizationIdAsync(string organizationId)
         {
-            return OrganizationWorkflows.Where(x => x.OrganizationId == organizationId).ToArrayAsync();
+            return OrganizationWorkflows.Where(x => x.OrganizationId == organizationId).OrderByDescending( x => x.CreatedDate ).ToArrayAsync();
         }
         public void AddWorkflow(OrganizationWorkflowEntity entity)
         {
@@ -306,9 +306,9 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
         }
 
-        public OrganizationWorkflowEntity Get(string id)
+        public Task<OrganizationWorkflowEntity> Get(string id)
         {
-            return OrganizationWorkflows.Where(x => x.Id == id).FirstOrDefault();
+            return OrganizationWorkflows.FirstOrDefaultAsync(x => x.Id == id);
         }
         #endregion
     }
