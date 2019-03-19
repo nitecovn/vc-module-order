@@ -1,6 +1,6 @@
 {
   "orders": {
-	"main-menu-title": "Bestellungen",
+    "main-menu-title": "Bestellungen",
     "blades": {
       "organization-workflow": {
         "title": "Import workflow from json",
@@ -258,6 +258,15 @@
       "cancel-document": "Beleg stornieren",
       "add-selected": "Ausgewählte hinzufügen",
       "add-item": "Artikel hinzufügen"
+    }
+  },
+  "workflows": {
+    "statuses": {
+      "pending-approval": "Ausstehende Genehmigung",
+      "approved": "Genehmigt",
+      "rejected": "Abgelehnt",
+      "Paid": "Bezahlt",
+      "Cancelled": "Abgebrochen"
     }
   }
 }

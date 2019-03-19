@@ -205,5 +205,18 @@ namespace VirtoCommerce.OrderModule.Data.Services
             var workflow = Get(workflowId);
             return GetWorkflowDetail(workflow);
         }
+
+        public string[] GetWorkflowStatusByOrganizationId(string organizationId)
+        {
+            string[] result = null;
+            _repositoryFactory.DisableChangesTracking();
+            var orgWorkflow = GetWorkFlowDetailByOrganizationId(organizationId);
+            if (orgWorkflow != null)
+            {
+                result = orgWorkflow.WorkflowStates.Select(x => x.Status).ToArray<string>();
+            }
+            return result;
+        }
+
     }
 }

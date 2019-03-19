@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.orderModule')
+angular.module('virtoCommerce.orderModule')
 .factory('virtoCommerce.orderModule.statusTranslationService', ['$translate', function ($translate) {
     return {
         translateStatuses: function (rawStatuses, operationType) {
@@ -24,4 +24,12 @@ function translateOrderStatus(rawStatus, operationType, $translate) {
     var translateKey = 'orders.settings.' + operationType.toLowerCase() + '-status.' + rawStatus.toLowerCase();
     var result = $translate.instant(translateKey);
     return result === translateKey ? rawStatus : result;
+}
+
+
+//translate workflow status 
+function translateWorkflowStatus(workflowStatus, $translate) {
+    var translateKey = 'workflows.statuses.' + workflowStatus.toLowerCase().replace(" ", "-");
+    var result = $translate.instant(translateKey);
+    return result === translateKey ? workflowStatus : result;
 }

@@ -9,14 +9,15 @@ using VirtoCommerce.Platform.Core.Web.Security;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
-    [RoutePrefix("api/orderworkflow")]
-   // [CheckPermission(Permission = WorkflowPredefinedPermissions.Read)]
+    [RoutePrefix("api/orderworkflows")]
     public class OrderWorkflowController : ApiController
     {
         private readonly IMemberService _memberService;
         private readonly IMemberSearchService _memberSearchService;
         private readonly IOrderWorkflowService _orderWorkflowService;
-        public OrderWorkflowController(IMemberService memberService, IMemberSearchService memberSearchService, IOrderWorkflowService orderWorkflowService)
+        public OrderWorkflowController(IMemberService memberService, IMemberSearchService memberSearchService,
+            IOrderWorkflowService orderWorkflowService
+            )
         {
             _memberService = memberService;
             _memberSearchService = memberSearchService;
@@ -33,23 +34,20 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return Ok(new { data = orderWorkflow });
         }
 
-        [HttpGet]
-        [Route("{orderId}")]
-        [ResponseType(typeof(string[]))]
-        //change order it to org id
-        public IHttpActionResult GetWorkflowStatus(string orderId)
+
+        [HttpPost]
+        [Route("")]
+        [ResponseType(typeof(OrderWorkflowModel))]
+        public IHttpActionResult Create([FromBody] OrderWorkflowModelApi apiModel)
         {
-            var workflowStatus = _orderWorkflowService.GetWorkflowStatus(orderId);
-            return Ok(new { data = workflowStatus });
+            OrderWorkflowModel model = new OrderWorkflowModel()
+            {
+                OrderId= apiModel.OrderId,
+                WorkflowId = apiModel.OrganizationId
+            };
+            var orderWorkflow = _orderWorkflowService.AddOrderWorkflow(model);
+            return Ok(new { data = orderWorkflow });
         }
-
-
-
-
-
-
-
-
     }
 }
 

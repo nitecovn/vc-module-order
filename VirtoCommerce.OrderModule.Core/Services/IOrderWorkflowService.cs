@@ -5,8 +5,6 @@ namespace VirtoCommerce.OrderModule.Core.Services
 {
     public interface IOrderWorkflowService
     {
-        string[] GetWorkflowStatus(string orderId);
-
         bool HasCustomWorkflow(string orderId);
         OrderWorkflowModel GetOrderWorkflow(string orderId);
         OrderWorkflowModel AddOrderWorkflow(OrderWorkflowModel orderWorkflowModel);        
