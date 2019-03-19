@@ -208,14 +208,13 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
         public string[] GetWorkflowStatusByOrganizationId(string organizationId)
         {
-            string[] result = null;
             _repositoryFactory.DisableChangesTracking();
             var orgWorkflow = GetWorkFlowDetailByOrganizationId(organizationId);
             if (orgWorkflow != null)
             {
-                result = orgWorkflow.WorkflowStates.Select(x => x.Status).ToArray<string>();
+                return orgWorkflow.WorkflowStates.Select(x => x.Status).ToArray<string>();
             }
-            return result;
+            return Enumerable.Empty<string>().ToArray(); 
         }
 
     }
