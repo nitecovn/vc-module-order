@@ -144,5 +144,10 @@
             <permission id="workflow:upload" name="Upload order workflow" description="Permission to import workflow data."/>
             <permission id="workflow:read" name="View order workflow" description="Permission to browse and view workflow data."/>
         </group>
+
+        <group name="Workflow">
+            <permission id="workflow:upload" name="Upload order workflow" description="Permission to import workflow data."/>
+            <permission id="workflow:read" name="View order workflow" description="Permission to browse and view workflow data."/>
+        </group>
     </permissions>
 </module>
