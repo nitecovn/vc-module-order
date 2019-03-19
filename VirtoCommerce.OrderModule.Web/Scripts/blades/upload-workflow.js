@@ -38,7 +38,6 @@ angular.module('virtoCommerce.orderModule')
                     };
                     $scope.isUploadSuccess = true;
                     $scope.hasFileChanged = true;
-                    $scope.hasWorkflow = true;
                     blade.isLoading = false;
                 };
 
@@ -84,8 +83,11 @@ angular.module('virtoCommerce.orderModule')
                                 $scope.jsonPath = '';
                                 $scope.workflowName = workflow.workflowName;
                                 $scope.modifiedDate = workflow.modifiedDate;
+                                $scope.hasWorkflow = true;
                                 blade.enabledWorkFlow = workflow.status;
-                                orgBlade.workflow.status = workflow.status;
+                                if (typeof orgBlade.workflow !== 'undefined' && typeof orgBlade.workflow.workflowName !== 'undefined') {
+                                    orgBlade.workflow.status = workflow.status;
+                                }
                                 $scope.hasStatusChanged = false;
                                 $scope.hasFileChanged = false;
                                 $scope.isUploadSuccess = false;
