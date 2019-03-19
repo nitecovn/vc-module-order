@@ -8,6 +8,7 @@ angular.module('virtoCommerce.orderModule')
 
             blade.isLoading = false;
             blade.enabledWorkFlow = false;
+            $scope.isUploadSuccess = false;
             $scope.hasWorkflow = false;
             $scope.hasFileChanged = false;
             $scope.hasStatusChanged = false;
@@ -19,7 +20,7 @@ angular.module('virtoCommerce.orderModule')
                 var uploader = $scope.uploader = new FileUploader({
                     scope: $scope,
                     headers: { Accept: 'application/json' },
-                    url: 'api/platform/assets?folderUrl=OrganizationWorkflow/' + orgBlade.currentEntity.id,
+                    url: 'api/platform/assets?folderUrl=OrganizationWorkflow/' + orgBlade.currentEntity.id + '/' + new Date().getTime(),
                     method: 'POST',
                     autoUpload: false,
                     removeAfterUpload: true
@@ -35,6 +36,7 @@ angular.module('virtoCommerce.orderModule')
                         jsonPath: asset[0].relativeUrl,
                         workflowName: asset[0].name
                     };
+                    $scope.isUploadSuccess = true;
                     $scope.hasFileChanged = true;
                     $scope.hasWorkflow = true;
                     blade.isLoading = false;
@@ -44,11 +46,13 @@ angular.module('virtoCommerce.orderModule')
                     _item = item;
                     $scope.jsonPath = item.file.name;
                     bladeNavigationService.setError(null, blade);
+                    $scope.isUploadSuccess = false;
                 };
 
                 uploader.onErrorItem = function (item, response, status, headers) {
                     _file = {};
                     resetWorkflowData();
+                    $scope.isUploadSuccess = false;
                     $scope.hasFileChanged = false;
                     blade.isLoading = false;
                     bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
@@ -89,7 +93,8 @@ angular.module('virtoCommerce.orderModule')
                     },
                     canExecuteMethod: function () {
                         return $scope.hasStatusChanged || $scope.hasFileChanged;
-                    }
+                    },
+                    permission: 'workflow:upload'
                 }
             ];
 

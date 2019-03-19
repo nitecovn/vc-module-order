@@ -1,6 +1,9 @@
-﻿/* Prices */
-.list.__prices
-{
+.__success {
+    color:#63b506;
+}
+
+/* Prices */
+.list.__prices {
     background: #fbfdfe;
     height: 100%;
     line-height: 1.4;
