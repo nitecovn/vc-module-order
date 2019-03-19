@@ -58,8 +58,8 @@
                     <label class="form-label">{{ 'orders.blades.organization-workflow.labels.enabled' | translate }}</label>
                     <div>
                         <div id="valuePlaceHolder">
-                            <label class="form-label __switch" ng-class="{ '__disabled' :  !hasWorkflow }">
-                                <input type="checkbox" ng-model="blade.enabledWorkFlow" ng-checked="blade.enabledWorkFlow" ng-disabled="!hasWorkflow" ng-change="onStatusChanged()">
+                            <label class="form-label __switch" ng-class="{ '__disabled' :  !hasWorkflow && !hasFileChanged }">
+                                <input type="checkbox" ng-model="blade.enabledWorkFlow" ng-checked="blade.enabledWorkFlow" ng-disabled="!hasWorkflow && !hasFileChanged" ng-change="onStatusChanged()">
                                 <span class="switch"></span>
                             </label>
                         </div>
