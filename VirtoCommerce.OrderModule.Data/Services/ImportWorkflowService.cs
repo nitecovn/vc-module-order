@@ -142,7 +142,10 @@ namespace VirtoCommerce.OrderModule.Data.Services
                     CommitChanges(_repositoryFactory);
                     return updateWorkflow.ToModel();
                 }
-                return null;
+                else
+                {
+                    throw new Exception("No workflow is updated");
+                }
             }
 
         }
