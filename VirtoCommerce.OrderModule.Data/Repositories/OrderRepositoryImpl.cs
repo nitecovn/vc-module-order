@@ -13,7 +13,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.OrderModule.Data.Repositories
 {
-    public class OrderRepositoryImpl : EFRepositoryBase, IOrderRepository, IOrganizationWorkflowRepository
+    public class OrderRepositoryImpl : EFRepositoryBase, IOrderRepository, IOrganizationWorkflowRepository  ,IOrderWorkflowRepository
     {
         public OrderRepositoryImpl()
         {
@@ -211,6 +211,9 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
             modelBuilder.Entity<OrganizationWorkflowEntity>().ToTable("OrganizationWorkflow").HasKey(x => x.Id).Property(x => x.Id);
             #endregion
 
+            #region OrderWorkflowEntity
+            modelBuilder.Entity<OrderWorkflowEntity>().ToTable("OrderWorkflow").HasKey(x => x.Id).Property(x => x.Id);
+            #endregion
             base.OnModelCreating(modelBuilder);
         }
 
@@ -283,6 +286,8 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
         #region IOrganizationWorkflowRepository
         public IQueryable<OrganizationWorkflowEntity> OrganizationWorkflows => GetAsQueryable<OrganizationWorkflowEntity>();
 
+      
+
         public Task<OrganizationWorkflowEntity[]> GetByOrganizationIdAsync(string organizationId)
         {
             return OrganizationWorkflows.Where(x => x.OrganizationId == organizationId).OrderByDescending( x => x.CreatedDate ).ToArrayAsync();
@@ -309,6 +314,21 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
         public Task<OrganizationWorkflowEntity> Get(string id)
         {
             return OrganizationWorkflows.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+
+        #endregion
+
+        #region IOrderWorkflowRepository
+        public IQueryable<OrderWorkflowEntity> OrderWorkflows => GetAsQueryable<OrderWorkflowEntity>();
+       public Task<OrderWorkflowEntity> GetOrderWorkflow(string orderId)
+        {
+            return OrderWorkflows.FirstOrDefaultAsync(x=> x.OrderId == orderId);
+        }
+
+        public void AddOrderWorkflow(OrderWorkflowEntity entity)
+        {
+            Add<OrderWorkflowEntity>(entity);
         }
         #endregion
     }

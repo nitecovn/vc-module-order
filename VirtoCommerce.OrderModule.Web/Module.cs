@@ -72,10 +72,12 @@ namespace VirtoCommerce.OrderModule.Web
             _container.RegisterType<ICustomerOrderBuilder, CustomerOrderBuilderImpl>();
 
             _container.RegisterType<IOrganizationWorkflowRepository>(new InjectionFactory(c => new OrderRepositoryImpl(_connectionString, _container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor())));
+            _container.RegisterType<IOrderWorkflowRepository>(new InjectionFactory(c => new OrderRepositoryImpl(_connectionString, _container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor())));
 
             _container.RegisterType<ICustomerOrderTotalsCalculator, DefaultCustomerOrderTotalsCalculator>(new ContainerControlledLifetimeManager());
 
             _container.RegisterType<IWorkflowService, ImportWorkflowService>();
+            _container.RegisterType<IOrderWorkflowService, OrderWorkflowService>();
         }
 
         public override void PostInitialize()

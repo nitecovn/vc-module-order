@@ -205,12 +205,17 @@
     <Compile Include="Migrations\201903180411284_CreateOrganizationWorkflow.Designer.cs">
       <DependentUpon>201903180411284_CreateOrganizationWorkflow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903180851063_CreateOrderWorkflow.cs" />
+    <Compile Include="Migrations\201903180851063_CreateOrderWorkflow.Designer.cs">
+      <DependentUpon>201903180851063_CreateOrderWorkflow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
     <Compile Include="Model\DiscountEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
     <Compile Include="Model\OperationEntity.cs" />
+    <Compile Include="Model\OrderWorkflowEntity.cs" />
     <Compile Include="Model\OrganizationWorkflowEntity.cs" />
     <Compile Include="Model\PaymentGatewayTransactionEntity.cs" />
     <Compile Include="Model\PaymentInEntity.cs" />
@@ -227,6 +232,7 @@
     <Compile Include="Notifications\OrderSentEmailNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IOrderRepository.cs" />
+    <Compile Include="Repositories\IOrderWorkflowRepository.cs" />
     <Compile Include="Repositories\OrderRepositoryImpl.cs" />
     <Compile Include="Resources\OrderResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -239,6 +245,7 @@
     <Compile Include="Services\ICustomerOrderBuilder.cs" />
     <Compile Include="Services\WorkflowService.cs" />
     <Compile Include="Repositories\IOrganizationWorkflowRepository.cs" />
+    <Compile Include="Services\OrderWorkflowService.cs" />
     <Compile Include="Utilities\OperationUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +335,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903180411284_CreateOrganizationWorkflow.resx">
       <DependentUpon>201903180411284_CreateOrganizationWorkflow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903180851063_CreateOrderWorkflow.resx">
+      <DependentUpon>201903180851063_CreateOrderWorkflow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\OrderResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
