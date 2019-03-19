@@ -11,7 +11,7 @@ using VirtoCommerce.Platform.Core.Web.Security;
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
     [RoutePrefix("api/workflows")]
-    //[CheckPermission(Permission = WorkflowPredefinedPermissions.Read)]
+    [CheckPermission(Permission = WorkflowPredefinedPermissions.Read)]
     public class OrganizationWorkflowController : ApiController
     {
         private readonly IMemberService _memberService;
@@ -47,7 +47,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(OrganizationWorkflowModel))]
-        //[CheckPermission(Permission = WorkflowPredefinedPermissions.Upload)]
+        [CheckPermission(Permission = WorkflowPredefinedPermissions.Upload)]
         public IHttpActionResult Upload([FromBody] OrganizationWorkflowModelApi workflowApiModel)
         {
             if (workflowApiModel == null)
