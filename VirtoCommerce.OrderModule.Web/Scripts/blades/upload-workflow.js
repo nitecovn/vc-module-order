@@ -85,6 +85,10 @@ angular.module('virtoCommerce.orderModule')
                                 $scope.workflowName = workflow.workflowName;
                                 $scope.modifiedDate = workflow.modifiedDate;
                                 blade.enabledWorkFlow = workflow.status;
+                                orgBlade.workflow.status = workflow.status;
+                                $scope.hasStatusChanged = false;
+                                $scope.hasFileChanged = false;
+                                $scope.isUploadSuccess = false;
                             }, function (response) {
                                 bladeNavigationService.setError(response, blade);
                             }).finally(function () {
