@@ -48,14 +48,13 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [Route("")]
         [ResponseType(typeof(OrganizationWorkflow))]
         [CheckPermission(Permission = WorkflowPredefinedPermissions.Upload)]
-        public IHttpActionResult Upload([FromBody] OrganizationWorkflowApi workflowModelApi)
+        public IHttpActionResult Upload([FromBody] OrganizationWorkflow model)
         {
-            if (workflowModelApi == null)
-                return Ok(new { });
-            
+            if (model == null)
+                return InternalServerError(new Exception("No workflow is uploaded"));
+
             try
             {
-                var model = workflowModelApi.ToModel();
                 var workflow = _importWorkflowService.ImportOrUpdateWorkflow(model);
                 return Ok(new { data = workflow });
             }
