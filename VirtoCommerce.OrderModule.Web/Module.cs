@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Web.Http;
 using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Common;
+using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Model;
@@ -21,6 +22,7 @@ using VirtoCommerce.OrderModule.Web.ExportImport;
 using VirtoCommerce.OrderModule.Web.JsonConverters;
 using VirtoCommerce.OrderModule.Web.Model;
 using VirtoCommerce.OrderModule.Web.Security;
+using VirtoCommerce.OrderModule.Web.Services;
 using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -71,12 +73,14 @@ namespace VirtoCommerce.OrderModule.Web
             _container.RegisterType<ICustomerOrderService, CustomerOrderServiceImpl>();
             _container.RegisterType<ICustomerOrderSearchService, CustomerOrderServiceImpl>();
             _container.RegisterType<ICustomerOrderBuilder, CustomerOrderBuilderImpl>();
-
+            
             _container.RegisterType<IOrganizationWorkflowRepository>(new InjectionFactory(c => new OrderRepositoryImpl(_connectionString, _container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor())));
 
             _container.RegisterType<ICustomerOrderTotalsCalculator, DefaultCustomerOrderTotalsCalculator>(new ContainerControlledLifetimeManager());
 
             _container.RegisterType<IWorkflowService, ImportWorkflowService>();
+            _container.RegisterType<IWorkflowPermissionService, WorkflowPermissionService>();
+            
         }
 
         public override void PostInitialize()

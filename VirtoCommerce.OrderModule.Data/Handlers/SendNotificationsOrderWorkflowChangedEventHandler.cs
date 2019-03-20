@@ -9,6 +9,7 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.OrderModule.Core.Services;
 using VirtoCommerce.OrderModule.Data.Notifications;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
@@ -24,15 +25,20 @@ namespace VirtoCommerce.OrderModule.Data.Handlers
         private readonly IStoreService _storeService;
         private readonly IMemberService _memberService;
         private readonly ISettingsManager _settingsManager;
-        private readonly ISecurityService _securityService;        
+        private readonly ISecurityService _securityService;
+        private readonly IMemberSearchService _memberSearchService;
+        private readonly IWorkflowPermissionService _workflowPermissionService;
 
-        public SendNotificationsOrderWorkflowChangedEventHandler(INotificationManager notificationManager, IStoreService storeService, IMemberService memberService, ISettingsManager settingsManager, ISecurityService securityService, ICustomerOrderService customerOrderService)
+
+        public SendNotificationsOrderWorkflowChangedEventHandler(INotificationManager notificationManager, IStoreService storeService, IMemberService memberService, ISettingsManager settingsManager, ISecurityService securityService, ICustomerOrderService customerOrderService, IMemberSearchService memberSearchService, IWorkflowPermissionService workflowPermissionService)
         {
             _notificationManager = notificationManager;
             _storeService = storeService;
             _memberService = memberService;
             _settingsManager = settingsManager;
             _securityService = securityService;
+            _memberSearchService = memberSearchService;
+            _workflowPermissionService = workflowPermissionService;
         }
 
         public virtual async Task Handle(OrderChangedEvent message)
@@ -47,22 +53,52 @@ namespace VirtoCommerce.OrderModule.Data.Handlers
         }
 
         protected virtual async Task TryToSendOrderNotificationsAsync(GenericChangedEntry<CustomerOrder> changedEntry)
-        {
-            // Collection of order notifications
-            var notifications = new List<OrderEmailNotificationBase>();
-
+        {           
             if (changedEntry.EntryState == EntryState.Added && !changedEntry.NewEntry.IsPrototype)
             {
-                var notificationWorkflow = _notificationManager.GetNewNotification<OrderWorkflowNotification>(changedEntry.NewEntry.StoreId, "Store", changedEntry.NewEntry.LanguageCode);
-                notifications.Add(notificationWorkflow);
+                var notifications = new List<OrderEmailNotificationBase>();
+                var emailManagerList = await GetManagerEmails(changedEntry);
+
+                foreach (var email in emailManagerList)
+                {
+                    var notificationWorkflow = _notificationManager.GetNewNotification<OrderWorkflowNotification>(changedEntry.NewEntry.StoreId, "Store", changedEntry.NewEntry.LanguageCode);
+                    notificationWorkflow.CustomerOrder = changedEntry.NewEntry;
+                    SetNotificationParameters(notificationWorkflow, changedEntry, email);
+
+                    notifications.Add(notificationWorkflow);
+                    _notificationManager.ScheduleSendNotification(notificationWorkflow);
+                }
+            }          
+        }
+
+        private async Task<List<string>> GetManagerEmails(GenericChangedEntry<CustomerOrder> changedEntry)
+        {
+            var currentUser = await _securityService.FindByIdAsync(changedEntry.NewEntry.CustomerId, UserDetails.Reduced);
+
+            var contact = _memberService.GetByIds(new[] { currentUser.MemberId }).OfType<Contact>().FirstOrDefault();
+
+            var searchCriteria = new MembersSearchCriteria
+            {
+                DeepSearch = true,
+                Take = int.MaxValue,
+                MemberId = contact.Organizations.FirstOrDefault()
+            };
+            var membersOfContact = _memberSearchService.SearchMembers(searchCriteria);
+            var membersWithSecurityInfo = membersOfContact.Results.OfType<IHasSecurityAccounts>();
+
+            var managerPermission = _workflowPermissionService.GetManagerPermission();
+            var emailManagerList = new List<string>();
+
+            foreach (var user in membersWithSecurityInfo)
+            {
+                var fullUserDetail = await _securityService.FindByIdAsync(user.SecurityAccounts.FirstOrDefault().Id, UserDetails.Full);                
+                if (fullUserDetail.Permissions.Contains(managerPermission))
+                {
+                    emailManagerList.AddDistinct<string>(fullUserDetail.Email);
+                }
             }
 
-            foreach (var notification in notifications)
-            {
-                notification.CustomerOrder = changedEntry.NewEntry;
-                await SetNotificationParametersAsync(notification, changedEntry);
-                _notificationManager.ScheduleSendNotification(notification);
-            }
+            return emailManagerList;
         }
 
         /// <summary>
@@ -70,7 +106,7 @@ namespace VirtoCommerce.OrderModule.Data.Handlers
         /// </summary>
         /// <param name="notification"></param>
         /// <param name="changedEntry"></param>
-        protected virtual async Task SetNotificationParametersAsync(Notification notification, GenericChangedEntry<CustomerOrder> changedEntry)
+        protected virtual void SetNotificationParameters(Notification notification, GenericChangedEntry<CustomerOrder> changedEntry, string recipientEmail)
         {
             var order = changedEntry.NewEntry;
             var store = _storeService.GetById(order.StoreId);
@@ -78,7 +114,7 @@ namespace VirtoCommerce.OrderModule.Data.Handlers
             notification.IsActive = true;
 
             notification.Sender = store.Email;
-            notification.Recipient = await GetOrderRecipientEmailAsync(order);
+            notification.Recipient = recipientEmail;
 
             // Allow to filter notification log either by customer order or by subscription
             if (string.IsNullOrEmpty(order.SubscriptionId))
