@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="Models\CustomerOrderWorkflow.cs" />
     <Compile Include="Models\OrderWorkflow.cs" />
+    <Compile Include="Models\WorkflowSearchCriteria.cs" />
     <Compile Include="Models\WorkflowStates.cs" />
     <Compile Include="Models\WorkflowState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

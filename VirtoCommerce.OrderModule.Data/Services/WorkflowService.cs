@@ -1,12 +1,17 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CacheManager.Core;
+using Newtonsoft.Json;
+using VirtoCommerce.Domain.Commerce.Model.Search;
 using VirtoCommerce.OrderModule.Core.Models;
 using VirtoCommerce.OrderModule.Core.Services;
 using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.OrderModule.Data.Services
@@ -15,7 +20,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
     {
         private readonly IBlobStorageProvider _blobStorageProvider;
         private readonly ICacheManager<object> _cacheManager;
-        private IOrderWorkflowRepository _repositoryFactory;
+        private readonly IOrderWorkflowRepository _repositoryFactory;
 
         private const string CacheRegion = "WorkflowRegion";
 
@@ -39,6 +44,49 @@ namespace VirtoCommerce.OrderModule.Data.Services
             return string.IsNullOrEmpty(workflowModel.JsonPath) ?
                 UpdateStatus(workflowModel.Status, workflowModel.OrganizationId) :
                 ImportWorkflow(workflowModel);
+        }
+
+        public OrderWorkflow GetByOrganizationId(string organizationId)
+        {
+            _repositoryFactory.DisableChangesTracking();
+            var retValue = _repositoryFactory.OrderWorkflows
+                .FirstOrDefault(x => x.OrganizationId == organizationId)?
+                .ToModel();
+
+            if (retValue != null)
+            {
+                LoadWorkflowStates(retValue);
+            }
+            return retValue;
+        }
+
+        public GenericSearchResult<OrderWorkflow> Search(WorkflowSearchCriteria searchWorkflowCriteria)
+        {
+            var result = new GenericSearchResult<OrderWorkflow>();
+            if (searchWorkflowCriteria == null) return result;
+            var expandPredicate = PredicateBuilder.True<OrderWorkflowEntity>();
+            if (!string.IsNullOrEmpty(searchWorkflowCriteria.OrganizationId))
+            {
+                expandPredicate = expandPredicate.And(x => x.OrganizationId == searchWorkflowCriteria.OrganizationId);
+            }
+            if (!string.IsNullOrEmpty(searchWorkflowCriteria.WorkflowName))
+            {
+                expandPredicate = expandPredicate.And(x => x.WorkflowName == searchWorkflowCriteria.WorkflowName);
+            }
+            if (searchWorkflowCriteria.Status.HasValue)
+            {
+                expandPredicate = expandPredicate.And(x => x.Status == searchWorkflowCriteria.Status);
+            }
+
+            _repositoryFactory.DisableChangesTracking();
+            var workflows = _repositoryFactory
+                .OrderWorkflows
+                .Where(expandPredicate)
+                .Select(x => x.ToModel())
+                .ToList();
+
+            result.Results = workflows;
+            return result;
         }
 
         private OrderWorkflow ImportWorkflow(OrderWorkflow workflowModel)
@@ -71,8 +119,26 @@ namespace VirtoCommerce.OrderModule.Data.Services
                     return orderWorkflow.ToModel();
                 }
 
-                throw new KeyNotFoundException(organizationId);
+                throw new KeyNotFoundException(nameof(organizationId));
             }
+        }
+
+        private void LoadWorkflowStates(OrderWorkflow workflow)
+        {
+            if (workflow == null) throw new ArgumentNullException(nameof(workflow));
+
+            var cacheKey = $"Order_WorkflowStates_{workflow.Id}";
+            var workflowStates = _cacheManager.Get(cacheKey, CacheRegion, () =>
+            {
+                string jsonValue;
+                using (var stream = _blobStorageProvider.OpenRead(workflow.JsonPath))
+                {
+                    var reader = new StreamReader(stream);
+                    jsonValue = reader.ReadToEnd();
+                }
+                return JsonConvert.DeserializeObject<WorkflowStates>(jsonValue);
+            });
+            workflow.WorkflowStates = workflowStates;
         }
     }
 }
