@@ -16,9 +16,9 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
     {
         private readonly IMemberService _memberService;
         private readonly IMemberSearchService _memberSearchService;
-        private readonly IImportWorkflowService _importWorkflowService;
+        private readonly IWorkflowService _importWorkflowService;
 
-        public OrganizationWorkflowController(IMemberService memberService, IMemberSearchService memberSearchService, IImportWorkflowService importWorkflowService)
+        public OrganizationWorkflowController(IMemberService memberService, IMemberSearchService memberSearchService, IWorkflowService importWorkflowService)
         {
             _memberService = memberService;
             _memberSearchService = memberSearchService;
@@ -28,7 +28,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
        
         [HttpGet]
         [Route("{organizationId}")]
-        [ResponseType(typeof(OrganizationWorkflowModel))]
+        [ResponseType(typeof(OrganizationWorkflow))]
         public IHttpActionResult Get(string organizationId)
         {
             var workflow = _importWorkflowService.GetWorkFlowByOrganizationId(organizationId);
@@ -37,7 +37,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 
         [HttpGet]
         [Route("detail/{organizationId}")]
-        [ResponseType(typeof(WorkflowModel))]
+        [ResponseType(typeof(WorkflowDetail))]
         public IHttpActionResult GetDetail(string organizationId)
         {
             var workflow = _importWorkflowService.GetWorkFlowDetailByOrganizationId(organizationId);
@@ -46,22 +46,16 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 
         [HttpPost]
         [Route("")]
-        [ResponseType(typeof(OrganizationWorkflowModel))]
+        [ResponseType(typeof(OrganizationWorkflow))]
         [CheckPermission(Permission = WorkflowPredefinedPermissions.Upload)]
-        public IHttpActionResult Upload([FromBody] OrganizationWorkflowModelApi workflowApiModel)
+        public IHttpActionResult Upload([FromBody] OrganizationWorkflowModelApi workflowModelApi)
         {
-            if (workflowApiModel == null)
+            if (workflowModelApi == null)
                 return Ok(new { });
             
             try
             {
-                var model = new OrganizationWorkflowModel()
-                {
-                    JsonPath = workflowApiModel.JsonPath,
-                    OrganizationId = workflowApiModel.OrganizationId,
-                    Status = workflowApiModel.Status,
-                    WorkflowName = workflowApiModel.WorkflowName
-                };
+                var model = workflowModelApi.ToModel();
                 var workflow = _importWorkflowService.ImportOrUpdateWorkflow(model);
                 return Ok(new { data = workflow });
             }

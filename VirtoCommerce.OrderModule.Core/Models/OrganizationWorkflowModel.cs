@@ -2,7 +2,7 @@ using System;
 
 namespace VirtoCommerce.OrderModule.Core.Models
 {
-    public class OrganizationWorkflowModel
+    public class OrganizationWorkflow
     {
         public string Id { get; set; }
         public string OrganizationId { get; set; }
