@@ -206,15 +206,16 @@ namespace VirtoCommerce.OrderModule.Data.Services
             return GetWorkflowDetail(workflow);
         }
 
-        public string[] GetWorkflowStatusByOrganizationId(string organizationId)
+        public GenericSearchResult<string> GetWorkflowStatusByOrganizationId(string organizationId)
         {
+            GenericSearchResult<string> result = new GenericSearchResult<string>();
             _repositoryFactory.DisableChangesTracking();
             var orgWorkflow = GetWorkFlowDetailByOrganizationId(organizationId);
             if (orgWorkflow != null)
             {
-                return orgWorkflow.WorkflowStates.Select(x => x.Status).ToArray<string>();
+                result.Results = orgWorkflow.WorkflowStates.Select(x => x.Status).ToArray<string>();
             }
-            return Enumerable.Empty<string>().ToArray(); 
+            return result;
         }
 
     }

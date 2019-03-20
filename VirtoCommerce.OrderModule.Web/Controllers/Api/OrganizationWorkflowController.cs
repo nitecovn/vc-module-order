@@ -72,8 +72,8 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [ResponseType(typeof(string[]))]
         public IHttpActionResult GetWorkflowStatus(string organizationId)
         {
-            var workflowStatus = _importWorkflowService.GetWorkflowStatusByOrganizationId(organizationId);
-            return Ok(new { data = workflowStatus });
+            var result = _importWorkflowService.GetWorkflowStatusByOrganizationId(organizationId);
+            return Ok(new { data = result.Results });
         }
 
     }

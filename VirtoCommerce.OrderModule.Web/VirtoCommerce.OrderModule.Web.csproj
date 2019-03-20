@@ -156,6 +156,7 @@
     <Compile Include="Controllers\Api\OrderModuleController.cs" />
     <Compile Include="Controllers\Api\OrderWorkflowController.cs" />
     <Compile Include="Controllers\Api\OrganizationWorkflowController.cs" />
+    <Compile Include="Controllers\Model\OrderWorkflowModelApi.cs" />
     <Compile Include="Controllers\Model\OrganizationWorkflowApi.cs" />
     <Compile Include="JsonConverters\PolymorphicOperationJsonConverter.cs" />
     <Compile Include="Model\KeyValuePair.cs" />

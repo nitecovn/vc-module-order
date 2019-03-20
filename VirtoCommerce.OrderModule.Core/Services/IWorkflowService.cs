@@ -17,5 +17,7 @@ namespace VirtoCommerce.OrderModule.Core.Services
         GenericSearchResult<OrganizationWorkflow> Search(WorkflowSearchCriteria searchWorkflowCriteria);
 
         OrganizationWorkflow ImportOrUpdateWorkflow(OrganizationWorkflow workflowModel);
+
+        GenericSearchResult<string> GetWorkflowStatusByOrganizationId(string organizationId);
     }
 }
