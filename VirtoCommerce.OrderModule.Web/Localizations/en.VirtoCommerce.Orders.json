@@ -432,8 +432,8 @@
       "pending-approval": "Pending Approval",
       "approved": "Approved",
       "rejected": "Rejected",
-      "Paid": "Paid",
-      "Cancelled": "Cancelled"
+      "paid": "Paid",
+      "cancelled": "Cancelled"
     }
   }
 }

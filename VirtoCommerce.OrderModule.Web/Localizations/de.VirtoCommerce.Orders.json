@@ -265,8 +265,8 @@
       "pending-approval": "Ausstehende Genehmigung",
       "approved": "Genehmigt",
       "rejected": "Abgelehnt",
-      "Paid": "Bezahlt",
-      "Cancelled": "Abgebrochen"
+      "paid": "Bezahlt",
+      "cancelled": "Abgebrochen"
     }
   }
 }

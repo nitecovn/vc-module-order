@@ -3,6 +3,7 @@ angular.module('virtoCommerce.orderModule')
         return $resource('api/workflows/:id', {},
         {
             search: { method: 'POST', url: 'api/workflows/search' },
-            updateWorkflow: { method: 'POST', url: 'api/workflows/' }
+            updateWorkflow: { method: 'POST', url: 'api/workflows/' },
+            getStatuses: { method: 'POST', url: 'api/workflows/statuses/:id' }
         });
-}]);
+    }]);
