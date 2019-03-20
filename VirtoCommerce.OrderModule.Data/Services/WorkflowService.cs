@@ -18,7 +18,7 @@ using VirtoCommerce.Domain.Commerce.Model.Search;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
-    public class ImportWorkflowService : ServiceBase, IWorkflowService
+    public class WorkflowService : ServiceBase, IWorkflowService
     {
         private readonly IBlobStorageProvider _blobStorageProvider;
         private readonly ICacheManager<object> _cacheManager;
@@ -26,7 +26,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
         private const string CacheRegion = "WorkflowRegion";
 
-        public ImportWorkflowService(IBlobStorageProvider blobStorageProvider,
+        public WorkflowService(IBlobStorageProvider blobStorageProvider,
             ICacheManager<object> cacheManager,
             IOrganizationWorkflowRepository repositoryFactory)
         {
