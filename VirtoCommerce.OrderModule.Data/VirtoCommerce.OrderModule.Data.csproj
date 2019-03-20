@@ -197,12 +197,17 @@
     <Compile Include="Migrations\201809140916230_AddedAmountColumnToPaymentInEntity.Designer.cs">
       <DependentUpon>201809140916230_AddedAmountColumnToPaymentInEntity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903201435488_CreateOrderWorkflow.cs" />
+    <Compile Include="Migrations\201903201435488_CreateOrderWorkflow.Designer.cs">
+      <DependentUpon>201903201435488_CreateOrderWorkflow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
     <Compile Include="Model\DiscountEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
     <Compile Include="Model\OperationEntity.cs" />
+    <Compile Include="Model\OrderWorkflowEntity.cs" />
     <Compile Include="Model\PaymentGatewayTransactionEntity.cs" />
     <Compile Include="Model\PaymentInEntity.cs" />
     <Compile Include="Model\ShipmentEntity.cs" />
@@ -219,15 +224,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IOrderRepository.cs" />
     <Compile Include="Repositories\OrderRepositoryImpl.cs" />
+    <Compile Include="Repositories\OrderWorkflowRepositoryImpl.cs" />
     <Compile Include="Resources\OrderResources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>OrderResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Services\CustomerOrderBuilderImpl.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
     <Compile Include="Services\DefaultCustomerOrderTotalsCalculator.cs" />
     <Compile Include="Services\ICustomerOrderBuilder.cs" />
+    <Compile Include="Repositories\IOrderWorkflowRepository.cs" />
     <Compile Include="Utilities\OperationUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -314,6 +321,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809140916230_AddedAmountColumnToPaymentInEntity.resx">
       <DependentUpon>201809140916230_AddedAmountColumnToPaymentInEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903201435488_CreateOrderWorkflow.resx">
+      <DependentUpon>201903201435488_CreateOrderWorkflow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\OrderResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
