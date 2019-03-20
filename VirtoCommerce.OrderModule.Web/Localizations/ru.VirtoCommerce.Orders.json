@@ -189,8 +189,14 @@
         },
         "customerOrder-totals": {
           "sub-total": "Промежуточный итог",
+          "shipping-total": "Общая стоимость доставки",
+          "shipping-sub-total": "Сумма промежуточного итога доставки",
+          "payment-sub-total": "Оплата",
+          "tax-total": "Общая сумма налога",
+          "discount": "Скидка",
           "discount-total": "Общая сумма скидки",
-          "tax-total": "Общая сумма налога"
+          "discount-total-with-tax": "Общая сумма скидки с учетом налога",
+          "total": "Итог"
         },
         "operation-comment": {
           "no-comments": "нет комментариев",
