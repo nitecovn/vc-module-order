@@ -6,7 +6,7 @@ using VirtoCommerce.OrderModule.Core.Models;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Model
 {
-    public class OrganizationWorkflowModelApi
+    public class OrganizationWorkflowApi
     {
         public string OrganizationId { get; set; }
         public string WorkflowName { get; set; }
