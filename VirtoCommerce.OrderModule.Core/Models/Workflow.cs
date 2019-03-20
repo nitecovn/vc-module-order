@@ -11,5 +11,6 @@ namespace VirtoCommerce.OrderModule.Core.Models
         public bool Status { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public WorkflowStates States { get; set; }
     }
 }

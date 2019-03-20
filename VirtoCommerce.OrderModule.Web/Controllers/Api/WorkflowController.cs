@@ -37,5 +37,14 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 return InternalServerError(ex);
             }
         }
+
+        [HttpGet]
+        [Route("{organizationId}")]
+        [ResponseType(typeof(Workflow))]
+        public IHttpActionResult GetDetail(string organizationId)
+        {
+            var workflow = _workflowService.GetByOrganizationId(organizationId);
+            return Ok(new { data = workflow });
+        }
     }
 }
