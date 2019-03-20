@@ -48,7 +48,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [Route("")]
         [ResponseType(typeof(OrganizationWorkflow))]
         [CheckPermission(Permission = WorkflowPredefinedPermissions.Upload)]
-        public IHttpActionResult Upload([FromBody] OrganizationWorkflowModelApi workflowModelApi)
+        public IHttpActionResult Upload([FromBody] OrganizationWorkflowApi workflowModelApi)
         {
             if (workflowModelApi == null)
                 return Ok(new { });
