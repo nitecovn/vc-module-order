@@ -56,7 +56,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
             string result = IsValidJson(workflowModel.JsonPath);
             if (!string.IsNullOrEmpty(result))
-                throw new Exception(result); 
+                throw new Exception(result);
             using (var changeTracker = GetChangeTracker(_repositoryFactory))
             {
                 changeTracker.Attach(workflow);
@@ -67,7 +67,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="jsonPath"></param>
         /// <returns>if return empty -> is valid, else error</returns>
@@ -81,7 +81,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 if (stream.Length > (1024 * 1024))
                     return "File is not over 1MB";
 
-                var reader = new StreamReader(stream);                
+                var reader = new StreamReader(stream);
                 jsonValue = reader.ReadToEnd();
             }
 
