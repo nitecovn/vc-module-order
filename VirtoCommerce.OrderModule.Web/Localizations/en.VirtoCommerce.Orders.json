@@ -266,7 +266,11 @@
         "ready to send": "Ready to send",
         "cancelled": "Cancelled",
         "partially sent": "Partially sent",
-        "completed": "Completed"
+        "completed": "Completed",
+        "pending-approval": "Pending Approval",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "paid": "Paid"
       },
       "shipment-status": {
         "new": "New",
@@ -292,15 +296,6 @@
       "cancel-document": "Cancel document",
       "add-selected": "Add selected",
       "add-item": "Add item"
-    }
-  },
-  "workflows": {
-    "statuses": {
-      "pending-approval": "Pending Approval",
-      "approved": "Approved",
-      "rejected": "Rejected",
-      "paid": "Paid",
-      "cancelled": "Cancelled"
     }
   }
 }

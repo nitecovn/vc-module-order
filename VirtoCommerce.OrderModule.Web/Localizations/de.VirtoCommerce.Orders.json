@@ -253,20 +253,27 @@
         }
       }
     },
+    "settings": {
+      "customerorder-status": {
+        "new": "New",
+        "not payed": "Not payed",
+        "pending": "Pending",
+        "processing": "Processing",
+        "ready to send": "Ready to send",
+        "cancelled": "Abgebrochen",
+        "partially sent": "Partially sent",
+        "completed": "Completed",
+        "pending-approval": "Ausstehende Genehmigung",
+        "approved": "Genehmigt",
+        "rejected": "Abgelehnt",
+        "paid": "Bezahlt"
+      }
+    },
     "commands": {
       "new-document": "Neues Dokument",
       "cancel-document": "Beleg stornieren",
       "add-selected": "Ausgewählte hinzufügen",
       "add-item": "Artikel hinzufügen"
-    }
-  },
-  "workflows": {
-    "statuses": {
-      "pending-approval": "Ausstehende Genehmigung",
-      "approved": "Genehmigt",
-      "rejected": "Abgelehnt",
-      "paid": "Bezahlt",
-      "cancelled": "Abgebrochen"
     }
   }
 }

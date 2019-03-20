@@ -266,7 +266,11 @@
         "ready to send": "Готов к отправке",
         "cancelled": "Отменен",
         "partially sent": "Частично отправлен",
-        "completed": "Выполнен"
+        "completed": "Выполнен",
+        "pending-approval": "В ожидании утверждения",
+        "approved": "Одобренный",
+        "rejected": "Отклонено",
+        "paid": "оплаченный"
       },
       "shipment-status": {
         "new": "Новый",
@@ -292,15 +296,6 @@
       "cancel-document": "Закрыть документ",
       "add-selected": "Добавить выбранные",
       "add-item": "Добавить товар"
-    }
-  },
-  "workflows": {
-    "statuses": {
-      "pending-approval": "В ожидании утверждения",
-      "approved": "Одобренный",
-      "rejected": "Отклонено",
-      "paid": "оплаченный",
-      "cancelled": "отменен"
     }
   }
 }

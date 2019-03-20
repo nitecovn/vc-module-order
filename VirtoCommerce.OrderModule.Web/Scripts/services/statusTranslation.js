@@ -25,11 +25,3 @@ function translateOrderStatus(rawStatus, operationType, $translate) {
     var result = $translate.instant(translateKey);
     return result === translateKey ? rawStatus : result;
 }
-
-
-//translate workflow status 
-function translateWorkflowStatus(workflowStatus, $translate) {
-    var translateKey = 'workflows.statuses.' + workflowStatus.toLowerCase().replace(" ", "-");
-    var result = $translate.instant(translateKey);
-    return result === translateKey ? workflowStatus : result;
-}

@@ -23,12 +23,19 @@ angular.module('virtoCommerce.orderModule')
 
             blade.stores = order_res_stores.query();
 
-            console.log(blade);
-            if (blade.currentEntity.organizationId) {
-                workflows.getStatuses({ id: blade.currentEntity.organizationId });
-            } else {
-                settings.getValues({ id: 'Order.Status' }, translateBladeStatuses);
-            }
+            $scope.$watch('blade.currentEntity', function (value) {
+                if (value && value.id) {
+                    workflows.getWorkflowByOrderId({ id: value.id }, function (order) {
+                        order = order.data ? order.data : order;
+                        if (order && order.workflowId) $scope.hasWorkflow = true;
+                        else settings.getValues({ id: 'Order.Status' }, translateBladeStatuses);
+                    }, function () {
+                        settings.getValues({ id: 'Order.Status' }, translateBladeStatuses);
+                    });
+                } else {
+                    settings.getValues({ id: 'Order.Status' }, translateBladeStatuses);
+                }
+            });
             
             blade.openStatusSettingManagement = function () {
                 var newBlade = new DictionarySettingDetailBlade('Order.Status');
