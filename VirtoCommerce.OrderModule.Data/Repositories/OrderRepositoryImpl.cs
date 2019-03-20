@@ -204,6 +204,15 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
             modelBuilder.Entity<PaymentGatewayTransactionEntity>().ToTable("OrderPaymentGatewayTransaction");
             #endregion
 
+            #region Workflow
+
+            modelBuilder.Entity<WorkflowEntity>()
+                .ToTable("Workflow")
+                .HasKey(x => x.Id)
+                .Property(x => x.Id);
+
+            #endregion
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -218,6 +227,8 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
         public IQueryable<AddressEntity> Addresses => GetAsQueryable<AddressEntity>();
         public IQueryable<LineItemEntity> LineItems => GetAsQueryable<LineItemEntity>();
         public IQueryable<PaymentGatewayTransactionEntity> Transactions => GetAsQueryable<PaymentGatewayTransactionEntity>();
+
+        public IQueryable<WorkflowEntity> Workflows => GetAsQueryable<WorkflowEntity>();
 
         public virtual CustomerOrderEntity[] GetCustomerOrdersByIds(string[] ids, CustomerOrderResponseGroup responseGroup)
         {
