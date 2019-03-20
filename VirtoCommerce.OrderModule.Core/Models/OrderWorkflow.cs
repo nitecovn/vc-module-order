@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.OrderModule.Core.Models
 {
@@ -11,5 +12,6 @@ namespace VirtoCommerce.OrderModule.Core.Models
         public bool Status { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public WorkflowStates WorkflowStates { get; set; }
     }
 }
