@@ -50,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\CustomerOrderWorkflow.cs" />
     <Compile Include="Models\OrganizationWorkflow.cs" />
     <Compile Include="Models\WorkflowSearchCriteria.cs" />
     <Compile Include="Models\WorkflowDetail.cs" />
