@@ -14,10 +14,11 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using LinqKit;
+using VirtoCommerce.Domain.Commerce.Model.Search;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
-    public class ImportWorkflowService : ServiceBase, IImportWorkflowService
+    public class ImportWorkflowService : ServiceBase, IWorkflowService
     {
         private readonly IBlobStorageProvider _blobStorageProvider;
         private readonly ICacheManager<object> _cacheManager;
@@ -34,7 +35,12 @@ namespace VirtoCommerce.OrderModule.Data.Services
             _repositoryFactory = repositoryFactory;
         }
 
-        public OrganizationWorkflowModel ImportOrUpdateWorkflow(OrganizationWorkflowModel workflowModel)
+        /// <summary>
+        /// in case if jsonPath is empty, will call ChangeWorkflowStatus, else call ImportWorkflow method
+        /// </summary>
+        /// <param name="workflowModel"></param>
+        /// <returns></returns>
+        public OrganizationWorkflow ImportOrUpdateWorkflow(OrganizationWorkflow workflowModel)
         {
             if (string.IsNullOrEmpty(workflowModel.JsonPath))
             {
@@ -43,17 +49,14 @@ namespace VirtoCommerce.OrderModule.Data.Services
             return ImportWorkflow(workflowModel);
         }
 
-        public OrganizationWorkflowModel ImportWorkflow(OrganizationWorkflowModel workflowModel)
+        private OrganizationWorkflow ImportWorkflow(OrganizationWorkflow workflowModel)
         {
-            var workflow = new OrganizationWorkflowEntity
-            {
-                OrganizationId = workflowModel.OrganizationId,
-                WorkflowName = workflowModel.WorkflowName,
-                JsonPath = workflowModel.JsonPath,
-                Status = workflowModel.Status
-            };
-            if (!IsValidJson(workflowModel.JsonPath))
-                return null;
+            var workflow = AbstractTypeFactory<OrganizationWorkflowEntity>.TryCreateInstance();
+            workflow.FromModel(workflowModel);
+
+            string result = IsValidJson(workflowModel.JsonPath);
+            if (!string.IsNullOrEmpty(result))
+                throw new Exception(result); 
             using (var changeTracker = GetChangeTracker(_repositoryFactory))
             {
                 changeTracker.Attach(workflow);
@@ -63,15 +66,20 @@ namespace VirtoCommerce.OrderModule.Data.Services
             return workflow.ToModel();
         }
 
-        private bool IsValidJson(string jsonPath)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonPath"></param>
+        /// <returns>if return empty -> is valid, else error</returns>
+        private string IsValidJson(string jsonPath)
         {
             string jsonValue;
             using (var stream = _blobStorageProvider.OpenRead(jsonPath))
             {
                 if (stream.Length == 0)
-                    throw new Exception("File is not empty");
+                    return "File is not empty";
                 if (stream.Length > (1024 * 1024))
-                    throw new Exception("File is not over 1MB");
+                    return "File is not over 1MB";
 
                 var reader = new StreamReader(stream);                
                 jsonValue = reader.ReadToEnd();
@@ -79,22 +87,22 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
             try
             {
-                var workFlow = JsonConvert.DeserializeObject<WorkflowModel>(jsonValue);
+                var workFlow = JsonConvert.DeserializeObject<WorkflowDetail>(jsonValue);
             }
             catch (Exception ex)
             {
-                throw ex;
+                return ex.Message;
             }
-            return true;
+            return string.Empty;
         }
 
-        public WorkflowModel GetWorkFlowDetailByOrganizationId(string organizationId)
+        public WorkflowDetail GetWorkFlowDetailByOrganizationId(string organizationId)
         {
             var model = GetWorkFlowByOrganizationId(organizationId);
             return GetWorkflowDetail(model);
         }
 
-        public OrganizationWorkflowModel GetWorkFlowByOrganizationId(string organizationId)
+        public OrganizationWorkflow GetWorkFlowByOrganizationId(string organizationId)
         {
             _repositoryFactory.DisableChangesTracking();
             var workflows = _repositoryFactory.GetByOrganizationIdAsync(organizationId);
@@ -107,7 +115,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
             return null;
         }
 
-        private WorkflowModel GetWorkflowDetail(OrganizationWorkflowModel model)
+        private WorkflowDetail GetWorkflowDetail(OrganizationWorkflow model)
         {
             if (model == null)
                 return null;
@@ -120,12 +128,12 @@ namespace VirtoCommerce.OrderModule.Data.Services
                     var reader = new StreamReader(stream);
                     jsonValue = reader.ReadToEnd();
                 }
-                var workFlow = JsonConvert.DeserializeObject<WorkflowModel>(jsonValue);
+                var workFlow = JsonConvert.DeserializeObject<WorkflowDetail>(jsonValue);
                 return workFlow;
             });
         }
 
-        public OrganizationWorkflowModel ChangeWorkflowStatus(bool status, string organizationId)
+        public OrganizationWorkflow ChangeWorkflowStatus(bool status, string organizationId)
         {
             //Update status for organization workflow
             var workflowSettingId = string.Empty;
@@ -149,9 +157,10 @@ namespace VirtoCommerce.OrderModule.Data.Services
             }
 
         }
-        public List<OrganizationWorkflowModel> Search(SearchCriteriaModel searchWorkflowCriteria)
+        public GenericSearchResult<OrganizationWorkflow> Search(WorkflowSearchCriteria searchWorkflowCriteria)
         {
-            if (searchWorkflowCriteria == null) return null;
+            GenericSearchResult<OrganizationWorkflow> result = new GenericSearchResult<OrganizationWorkflow>();
+            if (searchWorkflowCriteria == null) return result;
 
             var expandPredicate = LinqKit.PredicateBuilder.New<OrganizationWorkflowEntity>();
             if (!string.IsNullOrEmpty(searchWorkflowCriteria.OrganizationId))
@@ -171,16 +180,17 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
             _repositoryFactory.DisableChangesTracking();
             var workflowEntites = _repositoryFactory.Search(predicate).ToArray();
-            var organizationWorkflowDtos = new List<OrganizationWorkflowModel>();
+            var organizationWorkflowDtos = new List<OrganizationWorkflow>();
             foreach (var item in workflowEntites)
             {
                 organizationWorkflowDtos.Add(item.ToModel());
             }
-            return organizationWorkflowDtos;
+            result.Results = organizationWorkflowDtos;
+            return result;
 
         }
 
-        public OrganizationWorkflowModel Get(string workflowId)
+        public OrganizationWorkflow Get(string workflowId)
         {
             var workflow = _repositoryFactory.Get(workflowId);
             if (workflow.Result != null)
@@ -190,7 +200,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
             return null;
         }
 
-        public WorkflowModel GetDetail(string workflowId)
+        public WorkflowDetail GetDetail(string workflowId)
         {
             var workflow = Get(workflowId);
             return GetWorkflowDetail(workflow);

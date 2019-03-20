@@ -1,22 +1,21 @@
 using System.Collections.Generic;
+using VirtoCommerce.Domain.Commerce.Model.Search;
 using VirtoCommerce.OrderModule.Core.Models;
 
 namespace VirtoCommerce.OrderModule.Core.Services
 {
-    public interface IImportWorkflowService
+    public interface IWorkflowService
     {
-        OrganizationWorkflowModel ImportWorkflow(OrganizationWorkflowModel workflowModel);
+        WorkflowDetail GetWorkFlowDetailByOrganizationId(string organizationId);
 
-        WorkflowModel GetWorkFlowDetailByOrganizationId(string organizationId);
+        OrganizationWorkflow GetWorkFlowByOrganizationId(string organizationId);
 
-        OrganizationWorkflowModel GetWorkFlowByOrganizationId(string organizationId);
+        OrganizationWorkflow Get(string workflowId);
 
-        OrganizationWorkflowModel Get(string workflowId);
+        WorkflowDetail GetDetail(string workflowId);
 
-        WorkflowModel GetDetail(string workflowId);
+        GenericSearchResult<OrganizationWorkflow> Search(WorkflowSearchCriteria searchWorkflowCriteria);
 
-        List<OrganizationWorkflowModel> Search(SearchCriteriaModel searchWorkflowCriteria);
-
-        OrganizationWorkflowModel ImportOrUpdateWorkflow(OrganizationWorkflowModel workflowModel);
+        OrganizationWorkflow ImportOrUpdateWorkflow(OrganizationWorkflow workflowModel);
     }
 }

@@ -17,9 +17,9 @@ namespace VirtoCommerce.OrderModule.Data.Model
         public string JsonPath { get; set; }
         public bool Status { get; set; }
         
-        public OrganizationWorkflowModel ToModel()
+        public virtual OrganizationWorkflow ToModel()
         {
-            return new OrganizationWorkflowModel
+            return new OrganizationWorkflow
             {
                 Id = Id,
                 OrganizationId = OrganizationId,
@@ -29,6 +29,25 @@ namespace VirtoCommerce.OrderModule.Data.Model
                 CreatedDate = CreatedDate,
                 ModifiedDate = ModifiedDate
             };
+        }
+
+        public virtual OrganizationWorkflowEntity FromModel(OrganizationWorkflow model)
+        {
+            Id = model.Id;
+            OrganizationId = model.OrganizationId;
+            WorkflowName = model.WorkflowName;
+            JsonPath = model.JsonPath;
+            Status = model.Status;
+            return this;
+        }
+
+        public virtual void Patch(OrganizationWorkflowEntity target)
+        {
+            Id = target.Id;
+            OrganizationId = target.OrganizationId;
+            WorkflowName = target.WorkflowName;
+            JsonPath = target.JsonPath;
+            Status = target.Status;
         }
     }
 

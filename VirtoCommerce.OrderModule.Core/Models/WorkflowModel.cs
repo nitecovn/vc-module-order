@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace VirtoCommerce.OrderModule.Core.Models
 {
-    public class WorkflowModel
+    public class WorkflowDetail
     {
-        public IEnumerable<WorkflowStateModel> WorkflowStates { get; set; }
+        public IEnumerable<WorkflowState> WorkflowStates { get; set; }
     }
 }
