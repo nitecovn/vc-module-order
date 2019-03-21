@@ -20,7 +20,7 @@ angular.module('virtoCommerce.orderModule')
                     var newBlade = {
                         id: 'workflowBlade',
                         title: 'orders.blades.organization-workflow.title',
-                        controller: 'virtoCommerce.orderModule.uploadFlowController',
+                        controller: 'virtoCommerce.orderModule.uploadWorkflowController',
                         template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/upload-workflow.tpl.html',
                         isClosingDisabled: true,
                         currentEntity: blade.currentEntity,
