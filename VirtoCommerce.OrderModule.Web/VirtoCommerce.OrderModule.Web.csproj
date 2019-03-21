@@ -161,6 +161,8 @@
     <Compile Include="Security\WorkflowPredefinedPermissions.cs" />
     <Content Include="Scripts\blades\customerOrder-change-log.js" />
     <Content Include="Scripts\blades\customerOrder-change-log.tpl.html" />
+    <Content Include="Scripts\blades\upload-workflow.js" />
+    <Content Include="Scripts\blades\upload-workflow.tpl.html" />
     <Content Include="Scripts\resources\securityAccounts.js" />
     <Compile Include="Security\OrderPredefinedPermissions.cs" />
     <Compile Include="ExportImport\OrderExportImport.cs" />
@@ -247,6 +249,8 @@
     <Content Include="Scripts\widgets\customerOrder-totals-widget.tpl.html" />
     <Content Include="Scripts\widgets\operation-tree-widget.tpl.html" />
     <Content Include="Scripts\widgets\operation-tree-widget.js" />
+    <Content Include="Scripts\widgets\workflow-widget.js" />
+    <Content Include="Scripts\widgets\workflow-widget.tpl.html" />
     <Content Include="Scripts\wizards\newOperation\newOperation-wizard.js" />
     <Content Include="Localizations\ru.VirtoCommerce.Orders.json" />
     <None Include="module.ignore" />

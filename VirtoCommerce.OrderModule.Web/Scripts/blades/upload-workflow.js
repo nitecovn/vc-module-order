@@ -1,5 +1,5 @@
 angular.module('virtoCommerce.orderModule')
-    .controller('virtoCommerce.orderModule.uploadFlowController',
+    .controller('virtoCommerce.orderModule.uploadWorkflowController',
     ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.orderModule.workflows', 'FileUploader',
         function ($scope, bladeNavigationService, workflows, FileUploader) {
             var blade = $scope.blade;

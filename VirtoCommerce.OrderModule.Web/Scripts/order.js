@@ -208,7 +208,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
             isVisible: function (blade) {
                 return authService.checkPermission('workflow:read');
             },
-            template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/workflowUploadWidget.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/workflow-widget.tpl.html'
         };
         widgetService.registerWidget(workflowWidget, 'organizationDetail2');
 
