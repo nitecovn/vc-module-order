@@ -1,4 +1,4 @@
-﻿{
+{
     "orders": {
         "main-menu-title": "Orders",
         "blades": {
@@ -151,12 +151,28 @@
                         "description": "Incoming payment document"
                     }
                 }
+            },
+            "organization-workflow": {
+              "title": "Import workflow from json",
+              "labels": {
+                "import": "Start import",
+                "workflow-file": "Workflow file",
+                "upload-date": "Upload date",
+                "upload-progress": "Upload progress",
+                "upload-json-file": "Upload Json file",
+                "enabled": "Enabled"
+              },
+              "messages": {
+                "warning": "If there's an existing workflow, it'll be overwritten.",
+                "success": "Uploaded workflow successfully.",
+                "error": "Workflow uploading failed."
+              }
             }
         },
       "widgets": {
         "notifications": {
           "title": "Notifications feed",
-          "subtitle":  "Order notifications feed"
+          "subtitle": "Order notifications feed"
         },
         "customerOrder-address": {
           "title": "Addresses",
@@ -214,6 +230,10 @@
           "items-purchased": "Items purchased",
           "lines-per-order": "Lines per order",
           "revenue-per-customer": "Revenue per customer"
+        },
+        "organization-workflow": {
+          "title": "Workflow",
+          "blade-subtitle": "Import workflow from json"
         }
       },
         "dialogs": {

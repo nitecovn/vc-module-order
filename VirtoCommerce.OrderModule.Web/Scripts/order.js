@@ -58,8 +58,8 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
     };
 }])
 .run(
-  ['$rootScope', '$http', '$compile', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.bladeNavigationService', '$state', '$localStorage', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.permissionScopeResolver', 'virtoCommerce.storeModule.stores', 'virtoCommerce.orderModule.knownOperations',
-    function ($rootScope, $http, $compile, mainMenuService, widgetService, bladeNavigationService, $state, $localStorage, customerOrders, scopeResolver, stores, knownOperations) {
+    ['$rootScope', '$http', '$compile', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', '$state', '$localStorage', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.permissionScopeResolver', 'virtoCommerce.storeModule.stores', 'virtoCommerce.orderModule.knownOperations',
+    function ($rootScope, $http, $compile, mainMenuService, widgetService, bladeNavigationService, authService, $state, $localStorage, customerOrders, scopeResolver, stores, knownOperations) {
         //Register module in main menu
         var menuItem = {
             path: 'browse/orders',
@@ -202,6 +202,16 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
         knownOperations.registerOperation(shipmentOperation);
 
         //Register widgets
+        var workflowWidget = {
+            controller: 'virtoCommerce.orderModule.workflowWidgetController',
+            size: [1, 1],
+            isVisible: function (blade) {
+                return authService.checkPermission('workflow:read');
+            },
+            template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/workflowUploadWidget.tpl.html'
+        };
+        widgetService.registerWidget(workflowWidget, 'organizationDetail2');
+
         widgetService.registerWidget({
             controller: 'virtoCommerce.orderModule.notificationsLogWidgetController',
             template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/notificationsLogWidget.tpl.html'

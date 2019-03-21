@@ -1,4 +1,4 @@
-﻿{
+{
     "orders": {
         "main-menu-title": "Заказы",
         "blades": {
@@ -151,12 +151,28 @@
                         "description": "Входящий платежный документ"
                     }
                 }
+            },
+            "organization-workflow": {
+              "title": "Import workflow from json",
+              "labels": {
+                "import": "Start import",
+                "workflow-file": "Workflow file",
+                "upload-date": "Upload date",
+                "upload-progress": "Upload progress",
+                "upload-json-file": "Upload Json file",
+                "enabled": "Enabled"
+              },
+              "messages": {
+                "warning": "If there's an existing workflow, it'll be overwritten.",
+                "success": "Uploaded workflow successfully.",
+                "error": "Workflow uploading failed."
+              }
             }
         },
       "widgets": {
         "notifications": {
           "title": "Отправка уведомлений",
-          "subtitle":  "Отправка уведомлений о заказе"
+          "subtitle": "Отправка уведомлений о заказе"
         },
         "customerOrder-address": {
           "title": "Адреса",
@@ -214,6 +230,10 @@
           "items-purchased": "Куплено товаров",
           "lines-per-order": "Позиций в заказе",
           "revenue-per-customer": "Доход от одного клиента"
+        },
+        "organization-workflow": {
+          "title": "Workflow",
+          "blade-subtitle": "Import workflow from json"
         }
       },
         "dialogs": {

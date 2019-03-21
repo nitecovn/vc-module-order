@@ -151,6 +151,22 @@
             "description": "Eingehende zahlung Dokument"
           }
         }
+      },
+      "organization-workflow": {
+        "title": "Import workflow from json",
+        "labels": {
+          "import": "Start import",
+          "workflow-file": "Workflow file",
+          "upload-date": "Upload date",
+          "upload-progress": "Upload progress",
+          "upload-json-file": "Upload Json file",
+          "enabled": "Enabled"
+        },
+        "messages": {
+          "warning": "If there's an existing workflow, it'll be overwritten.",
+          "success": "Uploaded workflow successfully.",
+          "error": "Workflow uploading failed."
+        }
       }
     },
     "widgets": {
@@ -210,6 +226,10 @@
         "items-purchased": "Die Anzahl der gekauften Artikel",
         "lines-per-order": "Zeilen pro Bestellung",
         "revenue-per-customer": "Umsatz pro Kunde"
+      },
+      "organization-workflow": {
+        "title": "Workflow",
+        "blade-subtitle": "Import workflow from json"
       }
     },
     "dialogs": {
