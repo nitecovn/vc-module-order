@@ -258,16 +258,20 @@
             }
         },
         "settings": {
-            "customerorder-status": {
-                "new": "Новый",
-                "not payed": "Не оплачен",
-                "pending": "В ожидании",
-                "processing": "В обработке",
-                "ready to send": "Готов к отправке",
-                "cancelled": "Отменен",
-                "partially sent": "Частично отправлен",
-                "completed": "Выполнен"
-            },
+          "customerorder-status": {
+            "new": "Новый",
+            "not payed": "Не оплачен",
+            "pending": "В ожидании",
+            "processing": "В обработке",
+            "ready to send": "Готов к отправке",
+            "cancelled": "Отменен",
+            "partially sent": "Частично отправлен",
+            "completed": "Выполнен",
+            "pending-approval": "В ожидании утверждения",
+            "approved": "Одобренный",
+            "rejected": "Отклонено",
+            "paid": "оплаченный"
+          },
             "shipment-status": {
                 "new": "Новый",
                 "pickpack": "Сбор и Упаковка",
