@@ -108,7 +108,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
         {
             using (var changeTracker = GetChangeTracker(_repositoryFactory))
             {
-                var workflow = _repositoryFactory.Workflows.FirstOrDefault(x => x.OrganizationId == organizationId);
+                var workflow = _repositoryFactory.Workflows.Where(x => x.OrganizationId == organizationId).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
 
                 if (workflow != null)
                 {
