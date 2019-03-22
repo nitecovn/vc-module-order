@@ -13,6 +13,8 @@ using System.Web.Http.Description;
 using TheArtOfDev.HtmlRenderer.PdfSharp;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Common;
+using VirtoCommerce.Domain.Customer.Model;
+using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Domain.Payment.Model;
@@ -51,12 +53,15 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly INotificationTemplateResolver _notificationTemplateResolver;
         private readonly IChangeLogService _changeLogService;
         private readonly ICustomerOrderTotalsCalculator _totalsCalculator;
+        private readonly IMemberService _memberService;
+
         private static readonly object _lockObject = new object();
 
         public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator,
                                      ICacheManager<object> cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService,
                                      ICustomerOrderBuilder customerOrderBuilder, IShoppingCartService cartService, INotificationManager notificationManager,
-                                     INotificationTemplateResolver notificationTemplateResolver, IChangeLogService changeLogService, ICustomerOrderTotalsCalculator totalsCalculator)
+                                     INotificationTemplateResolver notificationTemplateResolver, IChangeLogService changeLogService, ICustomerOrderTotalsCalculator totalsCalculator,
+            IMemberService memberService)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
@@ -72,6 +77,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             _notificationTemplateResolver = notificationTemplateResolver;
             _changeLogService = changeLogService;
             _totalsCalculator = totalsCalculator;
+            _memberService = memberService;
         }
 
         /// <summary>
@@ -243,9 +249,12 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         {
             CustomerOrder retVal;
 
+            var cart = _cartService.GetByIds(new[] { id }).FirstOrDefault();
+            var orgId  = await GetOrganizationId(cart.CustomerId);
+            cart.OrganizationId = orgId;
+
             using (await AsyncLock.GetLockByKey(id).LockAsync())
             {
-                var cart = _cartService.GetByIds(new[] { id }).FirstOrDefault();
                 retVal = _customerOrderBuilder.PlaceCustomerOrderFromCart(cart);
             }
 
@@ -550,6 +559,25 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 }
             }
             return criteria;
+        }
+
+        private async Task<string> GetOrganizationId(string customerId)
+        {
+
+            var member = await _securityService.FindByIdAsync(customerId, UserDetails.Reduced);
+            var memberId = member.MemberId;
+
+            var memberList = _memberService.GetByIds(new[] { memberId });
+            if (memberList.OfType<Employee>().Any())
+            {
+                return memberList.OfType<Employee>().First().Organizations?.FirstOrDefault();
+            }
+            else if (memberList.OfType<Contact>().Any())
+            {
+                return memberList.OfType<Contact>().First().Organizations?.FirstOrDefault();
+            }
+
+            return string.Empty;
         }
     }
 }
