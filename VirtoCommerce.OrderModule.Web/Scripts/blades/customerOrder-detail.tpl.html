@@ -1,4 +1,4 @@
-﻿<div class="blade-content __medium-wide">
+<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="order-status" ng-if="blade.currentEntity.status">
@@ -41,10 +41,11 @@
 <script type="text/ng-template" id="statusSelector.html">
     <label class="form-label">
         {{ 'orders.blades.customerOrder-detail.labels.status' | translate }}
-        <a href="" ng-click="blade.openStatusSettingManagement()" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
+        <a href="" ng-if="!hasWorkflow" ng-click="blade.openStatusSettingManagement()" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
     </label>
     <div class="form-input">
-        <ui-select ng-model="blade.currentEntity.status" ng-disabled="blade.isLocked">
+        <span>{{ blade.currentEntity.status }}</span>
+        <ui-select ng-model="blade.currentEntity.status" ng-disabled="blade.isLocked" ng-if="!hasWorkflow">
             <ui-select-match placeholder="{{ 'orders.blades.customerOrder-detail.placeholders.status' | translate }}">{{$select.selected.value}}</ui-select-match>
             <ui-select-choices repeat="x.key as x in blade.statuses | filter: {'value': $select.search}">
                 <span ng-bind-html="x.value | highlight: $select.search"></span>

@@ -258,16 +258,20 @@
             }
         },
         "settings": {
-            "customerorder-status": {
-                "new": "New",
-                "not payed": "Not payed",
-                "pending": "Pending",
-                "processing": "Processing",
-                "ready to send": "Ready to send",
-                "cancelled": "Cancelled",
-                "partially sent": "Partially sent",
-                "completed": "Completed"
-            },
+          "customerorder-status": {
+            "new": "New",
+            "not payed": "Not payed",
+            "pending": "Pending",
+            "processing": "Processing",
+            "ready to send": "Ready to send",
+            "cancelled": "Cancelled",
+            "partially sent": "Partially sent",
+            "completed": "Completed",
+            "pending-approval": "Pending Approval",
+            "approved": "Approved",
+            "rejected": "Rejected",
+            "paid": "Paid"
+          },
             "shipment-status": {
                 "new": "New",
                 "pickpack": "Pick Pack",

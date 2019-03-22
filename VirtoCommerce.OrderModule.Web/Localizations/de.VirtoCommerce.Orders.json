@@ -1,6 +1,6 @@
 {
   "orders": {
-	"main-menu-title": "Bestellungen",
+    "main-menu-title": "Bestellungen",
     "blades": {
       "organization-workflow": {
         "title": "Import workflow from json",
@@ -251,6 +251,22 @@
         "placeholders": {
           "reason": "Bitte geben Sie einen Grund hier abzubrechen..."
         }
+      }
+    },
+    "settings": {
+      "customerorder-status": {
+        "new": "New",
+        "not payed": "Not payed",
+        "pending": "Pending",
+        "processing": "Processing",
+        "ready to send": "Ready to send",
+        "cancelled": "Abgebrochen",
+        "partially sent": "Partially sent",
+        "completed": "Completed",
+        "pending-approval": "Ausstehende Genehmigung",
+        "approved": "Genehmigt",
+        "rejected": "Abgelehnt",
+        "paid": "Bezahlt"
       }
     },
     "commands": {

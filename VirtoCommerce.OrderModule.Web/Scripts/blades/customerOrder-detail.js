@@ -1,6 +1,6 @@
 angular.module('virtoCommerce.orderModule')
-    .controller('virtoCommerce.orderModule.customerOrderDetailController', ['$scope', '$window', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.orderModule.order_res_stores', 'platformWebApp.settings', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.memberTypesResolverService', 'virtoCommerce.orderModule.statusTranslationService', 'virtoCommerce.orderModule.securityAccounts',
-    function ($scope, $window, bladeNavigationService, dialogService, order_res_stores, settings, members, memberTypesResolverService, statusTranslationService, securityAccounts) {
+    .controller('virtoCommerce.orderModule.customerOrderDetailController', ['$scope', '$window', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.orderModule.order_res_stores', 'platformWebApp.settings', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.memberTypesResolverService', 'virtoCommerce.orderModule.statusTranslationService', 'virtoCommerce.orderModule.securityAccounts', 'virtoCommerce.orderModule.workflows',
+        function ($scope, $window, bladeNavigationService, dialogService, order_res_stores, settings, members, memberTypesResolverService, statusTranslationService, securityAccounts, workflows) {
         var blade = $scope.blade;
 
         angular.extend(blade, {
@@ -22,7 +22,20 @@ angular.module('virtoCommerce.orderModule')
         });
 
         blade.stores = order_res_stores.query();
-        settings.getValues({ id: 'Order.Status' }, translateBladeStatuses);
+
+        $scope.$watch('blade.currentEntity', function (value) {
+            if (value && value.id) {
+                workflows.getWorkflowByOrderId({ id: value.id }, function (order) {
+                    if (order && order.workflowId) $scope.hasWorkflow = true;
+                    else settings.getValues({ id: 'Order.Status' }, translateBladeStatuses);
+                }, function () {
+                    settings.getValues({ id: 'Order.Status' }, translateBladeStatuses);
+                });
+            } else {
+                settings.getValues({ id: 'Order.Status' }, translateBladeStatuses);
+            }
+        });
+
         blade.openStatusSettingManagement = function () {
             var newBlade = new DictionarySettingDetailBlade('Order.Status');
             newBlade.parentRefresh = translateBladeStatuses;
@@ -92,6 +105,4 @@ angular.module('virtoCommerce.orderModule')
             //Display order items disabled by default
             // bladeNavigationService.showBlade(orderLineItemsBlade, blade);
         };
-
-
     }]);
