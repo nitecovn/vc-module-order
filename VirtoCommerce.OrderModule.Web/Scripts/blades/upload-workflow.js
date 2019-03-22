@@ -72,7 +72,7 @@ angular.module('virtoCommerce.orderModule')
                     icon: 'fa fa-save',
                     executeMethod: function () {
                         blade.isLoading = true;
-                        var workflowParams = angular.extend({
+                        var workflowParams = angular.extend({},{
                             organizationId: blade.currentEntity.id
                         }, _file, { status: blade.enabledWorkFlow });
                         // Save file information
@@ -87,7 +87,7 @@ angular.module('virtoCommerce.orderModule')
                                 $scope.hasFileChanged = false;
                                 $scope.isUploadSuccess = false;
                                 blade.isLoading = false;
-                                $scope.$emit('workflows.update');
+                                $scope.$emit('workflows.update', { workflow: workflow });
                             }, function (response) {
                                 bladeNavigationService.setError(response, blade);
                             });

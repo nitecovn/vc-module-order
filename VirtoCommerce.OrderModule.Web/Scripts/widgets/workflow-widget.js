@@ -29,7 +29,8 @@ angular.module('virtoCommerce.orderModule')
                     bladeNavigationService.showBlade(newBlade, $scope.blade);
                 };
 
-                $rootScope.$on('workflows.update', function () {
+                $rootScope.$on('workflows.update', function (event, data) {
+                    if (data && data.workflow) _workflow = data.workflow;
                     $scope.workflow = "1";
                 });
 }]);
