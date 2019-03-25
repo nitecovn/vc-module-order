@@ -226,6 +226,14 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
             #endregion
 
+            #region CustomerOrderWorkflow
+
+            modelBuilder.Entity<CustomerOrderWorkflowEntity>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<CustomerOrderWorkflowEntity>().ToTable("CustomerOrderWorkflow");
+
+            #endregion
+
             base.OnModelCreating(modelBuilder);
         }
 
