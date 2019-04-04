@@ -43,10 +43,10 @@ angular.module('virtoCommerce.orderModule')
             if (blade.organizationId) {
                 workflows.get({ id: blade.organizationId }, function (workflow) {
                     if (workflow && workflow.states && workflow.states.states && workflow.states.states.length) {
-                        var _states = workflow.states.states.map(function (item) {
+                        var states = workflow.states.states.map(function (item) {
                             return item.status;
                         });
-                        translateBladeStatuses(_states, 'customerOrder');
+                        translateBladeStatuses(states);
                     } else {
                         settings.getValues({ id: 'Order.Status' }, translateBladeStatuses);
                     }

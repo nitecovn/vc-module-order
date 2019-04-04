@@ -209,9 +209,14 @@
     <Compile Include="Migrations\201903210855079_CreateOrderWorkflow.Designer.cs">
       <DependentUpon>201903210855079_CreateOrderWorkflow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903250421184_AddWorkflowId.cs" />
+    <Compile Include="Migrations\201903250421184_AddWorkflowId.Designer.cs">
+      <DependentUpon>201903250421184_AddWorkflowId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
+    <Compile Include="Model\CustomerOrderWorkflowEntity.cs" />
     <Compile Include="Model\DiscountEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
     <Compile Include="Model\OperationEntity.cs" />
@@ -337,6 +342,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903210855079_CreateOrderWorkflow.resx">
       <DependentUpon>201903210855079_CreateOrderWorkflow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903250421184_AddWorkflowId.resx">
+      <DependentUpon>201903250421184_AddWorkflowId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\OrderResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

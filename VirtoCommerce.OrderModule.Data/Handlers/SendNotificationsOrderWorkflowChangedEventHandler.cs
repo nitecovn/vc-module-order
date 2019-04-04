@@ -8,6 +8,7 @@ using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.OrderModule.Core.Models;
 using VirtoCommerce.OrderModule.Core.Services;
 using VirtoCommerce.OrderModule.Data.Notifications;
 using VirtoCommerce.Platform.Core.Common;
@@ -27,8 +28,12 @@ namespace VirtoCommerce.OrderModule.Data.Handlers
         private readonly ISecurityService _securityService;
         private readonly IMemberSearchService _memberSearchService;
         private readonly IWorkflowPermissionService _workflowPermissionService;
+        private readonly IWorkflowService _workflowService;
 
-        public SendNotificationsOrderWorkflowChangedEventHandler(INotificationManager notificationManager, IStoreService storeService, IMemberService memberService, ISettingsManager settingsManager, ISecurityService securityService, ICustomerOrderService customerOrderService, IMemberSearchService memberSearchService, IWorkflowPermissionService workflowPermissionService)
+        public SendNotificationsOrderWorkflowChangedEventHandler(INotificationManager notificationManager, IStoreService storeService,
+            IMemberService memberService, ISettingsManager settingsManager, ISecurityService securityService,
+            ICustomerOrderService customerOrderService, IMemberSearchService memberSearchService,
+            IWorkflowPermissionService workflowPermissionService, IWorkflowService workflowService)
         {
             _notificationManager = notificationManager;
             _storeService = storeService;
@@ -37,6 +42,7 @@ namespace VirtoCommerce.OrderModule.Data.Handlers
             _securityService = securityService;
             _memberSearchService = memberSearchService;
             _workflowPermissionService = workflowPermissionService;
+            _workflowService = workflowService;
         }
 
         public virtual async Task Handle(OrderChangedEvent message)
@@ -45,7 +51,12 @@ namespace VirtoCommerce.OrderModule.Data.Handlers
             {
                 foreach (var changedEntry in message.ChangedEntries)
                 {
-                    await TryToSendOrderNotificationsAsync(changedEntry);
+                    var model = changedEntry.NewEntry as CustomerOrderWorkflow;
+                    var workflow =  _workflowService.GetByOrganizationId(model?.OrganizationId);
+                    if (workflow != null && workflow.Status)
+                    {
+                        await TryToSendOrderNotificationsAsync(changedEntry);
+                    }
                 }
             }
         }

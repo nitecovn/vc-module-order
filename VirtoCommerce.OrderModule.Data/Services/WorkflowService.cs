@@ -50,8 +50,8 @@ namespace VirtoCommerce.OrderModule.Data.Services
         {
             _repositoryFactory.DisableChangesTracking();
             var retValue = _repositoryFactory.Workflows
-                .FirstOrDefault(x => x.OrganizationId == organizationId)?
-                .ToModel(AbstractTypeFactory<Workflow>.TryCreateInstance());
+                .OrderByDescending(x=>x.CreatedDate)
+                .FirstOrDefault(x => x.OrganizationId == organizationId)?.ToModel(AbstractTypeFactory<Workflow>.TryCreateInstance());
 
             if (retValue != null)
             {

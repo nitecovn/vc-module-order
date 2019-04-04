@@ -16,6 +16,7 @@ using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.OrderModule.Core.Models;
 using VirtoCommerce.OrderModule.Core.Services;
 using VirtoCommerce.OrderModule.Data.Handlers;
+using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.OrderModule.Data.Notifications;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
@@ -191,6 +192,7 @@ namespace VirtoCommerce.OrderModule.Web
             httpConfiguration.Formatters.XmlFormatter.SetSerializer<CustomerOrderSearchResult>(new DataContractSerializer(typeof(CustomerOrderSearchResult), allOrderKnownTypes));
 
             //customer order workflow
+            AbstractTypeFactory<CustomerOrderEntity>.OverrideType<CustomerOrderEntity, CustomerOrderWorkflowEntity>();
             AbstractTypeFactory<CustomerOrder>.OverrideType<CustomerOrder, CustomerOrderWorkflow>();
         }
 
