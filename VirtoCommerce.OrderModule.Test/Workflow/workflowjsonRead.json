@@ -1,0 +1,27 @@
+{
+	"States":[
+	{
+		"Status":"Pending Approval",
+		"NextState":
+		{"Manager":["Approved","Rejected"]}
+	},
+	{
+		"Status":"Approved",
+		"NextState":
+		{"Employee":["Paid","Cancelled"]}
+	},
+	{
+		"Status":"Rejected",
+		"NextState":
+		{"Employee":["Cancelled"]}
+	},
+	{
+		"Status":"Cancelled",
+		"NextState":{}
+	},
+	{
+		"Status":"Paid",
+		"NextState":{}
+	}
+	]
+}
